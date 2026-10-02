@@ -1,0 +1,191 @@
+/* ===============================================================
+@file: styles.css
+@filepath: dashboard_engine/_framework/styles.css
+@version: 1.4.0
+@updated: 2026-09-12 08:41:19 AM CDT
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The dashboard's shared design system — one token
+  set, one component vocabulary, every page in this web root
+  links it. Color codes SEMANTIC LAYER, never decoration (the
+  anatomy-key art law). Since 1.3.0 this file is the ONE style
+  owner of the stamped framework: the ENGINE COMPONENTS section
+  at the end holds the app-shell, zoom, status-key, stamp-strip,
+  toast, glow, NOW-strip, live-board and nav-badge rules the
+  engine used to inject as a JavaScript string. Order matters:
+  those rules sit last so they win where they overlap the base
+  rules above (min-height:0 retires .frame's calc()).
+@tags: dashboard, engine, framework, design-system, styles
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-07-27  Greg & Claude  1.0.0          Born for the backlog migration — tokens + header/nav/board components extracted from index.html 1.0.0, plus the ledger vocabulary (filter chips, item cards, verbatim pre bodies, shipped dimming)
+2026-07-27  Greg & Claude  1.1.0          The love pass — item anatomy: kind-colored rails (features cyan · bugs orange · ideas gold · shipped green), #num chips, title row, OPEN/SHIPPED pills, reflowed prose with bold-as-gold typography
+2026-07-27  Greg & Claude  1.1.1          Promoted from VectorPal _docs/_dashboard/, proven live 2026-07-27 — founds dashboard_engine/ per WORKORDER-20260727-MAIMETHODOLOGY-DASHBOARD-ENGINE; content byte-identical to the proven copy, header only
+2026-07-30  Greg & Claude  1.2.0          Compact section headings (Greg) — descriptor tag inline beside the title (float:right removed), heading margins tightened 26/14 → 22/12, first heading on a page flush to the top; @filepath corrected to _framework/
+2026-09-05  Greg & Claude  1.3.0          ONE STYLE OWNER — the engine's injected CSS moves here: the five app-shell overrides (body/header/.frame/nav/main) merge into their base rules, the other 54 rules land verbatim as the ENGINE COMPONENTS section; header onto the Core_15 grid with @company and @tags; stale "index.html inline copy" debt note retired (assessment KNOWN FIXES row 9)
+2026-09-12  Greg & Claude  1.4.0          Work-first Home (engine 2.5.0): the board count (.wb-meta, .wb-bar, .wb-growing orange) and the quiet wire line (.wire-line) at the bottom of the work
+=============================================================== */
+:root{
+  --bg:#0B0E14; --panel:#111622; --hair:#232B3D;
+  --ink:#D7DEEA; --dim:#6B7690; --faint:#3A4358;
+  --cyan:#3FD8E8; --magenta:#E850A0;
+  --step:#79c0ff; --done:#7ee787; --gap:#ffd966; --mod:#ffa657;
+  --danger:#ff6b6b;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{background:var(--bg); color:var(--ink);
+  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px;
+  display:flex; flex-direction:column; overflow:hidden;}   /* app shell: header + nav pinned, only main scrolls */
+a{color:var(--cyan); text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+header{padding:22px 28px 14px; border-bottom:1px solid var(--hair); flex:0 0 auto;}
+header h1{font-size:15px; letter-spacing:3px; font-weight:600;}
+header h1 .v{color:var(--cyan);} header h1 .p{color:var(--magenta);}
+header .sub{margin-top:6px; font-size:10px; letter-spacing:1px; color:var(--dim);}
+header .sub b{color:var(--done); font-weight:500;}
+
+.frame{display:flex; flex:1 1 auto; min-height:0;}   /* min-height:0 retires the old calc(100vh - 70px) */
+nav{width:190px; flex:0 0 190px; padding:20px 16px; border-right:1px solid var(--hair); overflow-y:auto;}
+nav .cap{font-size:9px; letter-spacing:2px; color:var(--dim); margin:14px 0 6px;}
+nav a{display:block; padding:5px 8px; border-radius:5px; font-size:11px; color:var(--ink);}
+nav a:hover{background:var(--panel); text-decoration:none; color:var(--cyan);}
+nav input{width:100%; background:var(--panel); border:1px solid var(--hair);
+  border-radius:6px; color:var(--ink); font:inherit; font-size:11px;
+  padding:6px 8px; outline:none;}
+nav input:focus{border-color:var(--cyan);}
+
+main{flex:1; min-width:0; padding:24px 28px 60px; max-width:1080px; overflow-y:auto;}
+section{margin-bottom:42px;}
+h2{font-size:11px; letter-spacing:2px; color:var(--mod); display:flex;
+  justify-content:flex-start; align-items:baseline; gap:14px;
+  border-bottom:1px solid var(--hair); padding-bottom:6px; margin:22px 0 12px;}
+main > h2:first-child, #authored > section:first-child > h2{margin-top:0;}
+h2 .tag{color:var(--dim); letter-spacing:1px; font-weight:400;}
+
+.legend{display:flex; flex-wrap:wrap; gap:14px 22px; padding:10px 0 16px; font-size:10px;}
+.legend span{display:inline-flex; align-items:center; gap:6px; color:var(--dim);}
+.sw{width:10px; height:10px; border-radius:3px; display:inline-block;}
+
+.boards{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px;}
+.card{background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:14px 16px;}
+.card h3{font-size:10px; letter-spacing:2px; color:var(--cyan); margin-bottom:10px;}
+.row{display:flex; gap:10px; padding:6px 0; border-top:1px solid rgba(35,43,61,.6);
+  font-size:11px; align-items:baseline;}
+.row:first-of-type{border-top:none;}
+.row .k{flex:0 0 118px; color:var(--ink);}
+.row .s{flex:0 0 16px; text-align:center;}
+.row .n{flex:1; color:var(--dim); line-height:1.45;}
+.g-done{color:var(--done);} .g-part{color:var(--gap);}
+.g-plan{color:var(--faint);} .g-live{color:var(--cyan);}
+.hit{outline:1px solid var(--gap); border-radius:6px;}
+.hidden{display:none;}
+
+.note{font-size:10px; color:var(--dim); line-height:1.6; margin-top:10px;}
+.note b{color:var(--ink); font-weight:500;}
+footer{padding:18px 28px; border-top:1px solid var(--hair);
+  font-size:9px; letter-spacing:1px; color:var(--faint);}
+
+/* ── The ledger vocabulary (backlog.html) ─────────────────────── */
+.chips{display:flex; gap:8px; flex-wrap:wrap; margin:2px 0 18px;}
+.chip{font-size:10px; letter-spacing:1px; padding:5px 11px;
+  border:1px solid var(--hair); border-radius:20px; color:var(--dim);
+  cursor:pointer; background:var(--panel); user-select:none;}
+.chip.on{color:var(--cyan); border-color:var(--cyan);}
+.count{font-size:10px; color:var(--faint); letter-spacing:1px; margin:0 0 14px;}
+.item{display:flex; background:var(--panel); border:1px solid var(--hair);
+  border-radius:10px; margin-bottom:14px; overflow:hidden;}
+.item .rail{flex:0 0 4px; background:var(--faint);}
+.item[data-kind="features"] .rail{background:var(--cyan);}
+.item[data-kind="bugs"] .rail{background:var(--mod);}
+.item[data-kind="ideas"] .rail{background:var(--gap);}
+.item[data-status="shipped"]{opacity:.55;}
+.item[data-status="shipped"] .rail{background:var(--done);}
+.inner{flex:1; min-width:0; padding:13px 16px 11px;}
+.itemhead{display:flex; align-items:baseline; gap:10px; margin-bottom:8px;}
+.num{font-size:10px; color:var(--dim); background:var(--bg);
+  border:1px solid var(--hair); border-radius:6px; padding:2px 7px;
+  letter-spacing:1px; flex:0 0 auto;}
+.itemhead h4{font-size:12px; font-weight:600; color:var(--ink);
+  letter-spacing:.3px; line-height:1.45; flex:1; min-width:0;}
+.itemhead h4 s{color:var(--dim);}
+.pill{font-size:9px; letter-spacing:1.5px; padding:3px 9px;
+  border-radius:20px; flex:0 0 auto;}
+.pill-open{color:var(--cyan); border:1px solid rgba(63,216,232,.4);}
+.pill-ship{color:var(--done); border:1px solid rgba(126,231,135,.4);}
+.prose{font-size:11.5px; line-height:1.65; color:var(--ink);}
+.prose p{margin:0 0 9px; overflow-wrap:anywhere;}
+.prose p:last-child{margin-bottom:2px;}
+.prose b{color:var(--gap); font-weight:600;}
+.prose s{color:var(--dim);}
+
+/* ===============================================================
+   ENGINE COMPONENTS — rules the engine used to inject at load
+   (dashboard.js injectStyle, retired 2.0.0). They sit LAST on
+   purpose: later rules win where they overlap the base rules
+   above, exactly as the injected <style> once did.
+   =============================================================== */
+.zoomrow{display:flex; gap:4px;}
+.zoomsel{background:var(--panel); color:var(--dim); border:1px solid var(--hair);border-radius:5px; padding:2px 4px; font:inherit; font-size:9px; letter-spacing:1px; cursor:pointer;}
+nav .zoomsel{width:100%; font-size:10px; padding:4px 6px;}
+header .zoomsel{position:absolute; right:18px; bottom:6px;}
+.zoomsel:hover{color:var(--cyan); border-color:var(--cyan);}
+.statuskey{display:flex; justify-content:flex-end; gap:16px; font-size:9px;letter-spacing:1px; color:var(--dim);}
+.hrow2{display:flex; align-items:baseline;}
+.hrow2 .statuskey{flex:1 1 auto; justify-content:center; margin-right:78px;}
+.statuskey .wb-s{margin-right:2px;}
+.confetti{position:absolute; top:-6px; width:6px; height:10px; border-radius:1px;animation:wb-confetti linear forwards; pointer-events:none; z-index:5;}
+@keyframes wb-confetti{0%{transform:translateY(0) rotate(0deg); opacity:1;} 100%{transform:translateY(340px) rotate(540deg); opacity:0;}}
+.balloon-sky{position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden;}
+.balloon{position:absolute; pointer-events:none;animation:wb-balloon ease-in forwards; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));}
+@keyframes wb-balloon{0%{transform:translateY(0) translateX(0) rotate(0deg); opacity:0;} 8%{opacity:1;} 30%{transform:translateY(-32vh) translateX(30px) rotate(5deg);} 55%{transform:translateY(-62vh) translateX(-26px) rotate(-5deg);} 80%{transform:translateY(-92vh) translateX(22px) rotate(4deg); opacity:1;} 100%{transform:translateY(-125vh) translateX(-12px) rotate(-3deg); opacity:0;}}
+.wb-card.wb-poof{transform:scale(0.85); opacity:0; transition:transform .45s ease, opacity .45s ease;}
+.stampstrip{display:flex; gap:18px; flex-wrap:wrap; margin-top:6px; font-size:10px;letter-spacing:.08em; opacity:.75;}
+.stampcell{display:inline-flex; gap:6px; align-items:baseline; cursor:help;}
+.stampkey{color:var(--t); text-transform:uppercase;}
+.stampkeyicon{width:9px; height:9px; margin-left:4px; vertical-align:-1px;}
+.stampval{color:var(--gap);}
+.stampval-sound.unarmed{opacity:.45;}
+.courier-warn{position:fixed; top:14px; right:14px; z-index:10000; max-width:380px;background:#2a2113; border:1px solid var(--gap); border-radius:8px; padding:12px 14px;color:var(--gap); font-size:11px; line-height:1.5; display:flex; gap:10px; align-items:flex-start;box-shadow:0 6px 24px rgba(0,0,0,0.5);}
+.courier-warn button{background:none; border:1px solid var(--gap); color:var(--gap);border-radius:5px; padding:3px 8px; font:inherit; font-size:9px; letter-spacing:1px; cursor:pointer; flex-shrink:0;}
+.courier-warn button:hover{background:var(--gap); color:var(--bg);}
+.courier-warn.healed{border-color:var(--done); color:var(--done); background:#132a1c;transition:opacity .8s ease;}
+.wb-live-glow{animation:wb-glowpulse 2.2s ease-in-out infinite; border-radius:10px;}
+@keyframes wb-glowpulse{0%,100%{box-shadow:0 0 0 1px rgba(57,198,217,0.35), 0 0 10px rgba(57,198,217,0.18);} 50%{box-shadow:0 0 0 2px rgba(57,198,217,0.75), 0 0 22px rgba(57,198,217,0.45);}}
+.wb-row.wb-row-changed{background:rgba(57,198,217,0.06); position:relative; padding-left:14px;}
+.wb-row.wb-row-changed::before{content:""; position:absolute; left:0; top:3px; bottom:3px;width:3px; background:var(--cyan); border-radius:2px;}
+#wire-now{display:none;}
+#wire-now.live{display:flex; gap:12px; align-items:baseline; flex:0 0 auto; padding:7px 28px; border-bottom:1px solid var(--hair); font-size:11px; background:var(--panel);}
+#wire-now .wn-tag{color:var(--cyan); font-weight:600; letter-spacing:2px;}
+#wire-now .wn-note{color:var(--ink);}
+#wire-now .wn-anchor{color:var(--gap);}
+#wire-now .wn-at{color:var(--dim); margin-left:auto;}
+#wire-boards{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin:0 0 24px;}
+#wire-boards:empty{display:none;}
+.wb-card{background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:14px 16px;}
+.wb-card h3{font-size:10px; letter-spacing:2px; color:var(--cyan); margin-bottom:10px;}
+.wb-row{display:flex; gap:10px; padding:6px 0; border-top:1px solid rgba(35,43,61,.6); font-size:11px; align-items:baseline;}
+.wb-row:first-of-type{border-top:none;}
+.wb-row .wb-k{flex:0 0 128px; color:var(--ink);}
+.wb-row .wb-s{flex:0 0 16px; text-align:center;}
+.wb-row .wb-n{flex:1; color:var(--dim); line-height:1.45;}
+.wb-s.s-done{color:var(--done);}
+.wb-s.s-live{color:var(--cyan);}
+.wb-s.s-part{color:var(--gap);}
+.wb-s.s-plan{color:var(--faint);}
+@keyframes wb-flash{0%{box-shadow:0 0 0 2px var(--cyan);} 100%{box-shadow:0 0 0 0 transparent;}}
+.wb-card.wb-updated{animation:wb-flash 1.2s ease-out;}
+nav a.here{color:var(--ink); border-left:2px solid var(--cyan); padding-left:8px; margin-left:-10px;}
+.nbadge{font-size:8px; letter-spacing:1px; color:var(--cyan); margin-left:6px; vertical-align:1px;animation:nbadge-pulse 2.2s ease-in-out infinite;}
+@keyframes nbadge-pulse{0%,100%{opacity:0.55;} 50%{opacity:1;}}
+h2.live-h2{display:flex; justify-content:flex-start; align-items:baseline; gap:14px; margin:0 0 12px 0; padding-bottom:6px;}
+/* 2.5.0 — the count on every board card, and the quiet wire line */
+.wb-meta{margin-left:10px; color:var(--dim); letter-spacing:1px; font-weight:400;}
+.wb-meta.wb-growing{color:var(--mod);}
+.wb-bar{height:4px; background:var(--hair); border-radius:2px; margin:0 0 10px; overflow:hidden;}
+.wb-bar-fill{height:100%; background:var(--done); border-radius:2px; transition:width .4s ease;}
+.wb-bar-fill.wb-growing{background:var(--mod);}
+.wire-line{margin-top:28px; padding-top:10px; border-top:1px solid var(--hair); font-size:10px; letter-spacing:1px; color:var(--faint); cursor:pointer; user-select:none;}
+.wire-line:hover{color:var(--dim);}
+.wire-line.refused{color:var(--mod);}

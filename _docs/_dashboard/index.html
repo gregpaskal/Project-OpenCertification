@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!-- ===============================================================
+@file: index.html
+@filepath: _docs/_dashboard/index.html
+@version: 1.1.1
+@updated: 2026-10-01 08:31:14 PM CDT
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: Living Dashboard for Project-OpenCertification — THE ONE
+  INSTRUMENT (Core_03): map and record in one page. Founded by
+  AiAssist from dashboard_engine template v2.0.0;
+  behavior and skin arrive from the stamped engine snapshot in
+  _framework/. FOUNDED, NOT SYNCED — this page belongs to this
+  project from birth; grow it at every sync point per the five
+  dashboard laws.
+@tags: living-dashboard, content-page, founded
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-10-01  Greg & Claude  1.0.0          Founded by AiAssist from dashboard_engine template v2.0.0
+2026-10-01  Greg & Claude  1.1.0          First authored content: Home (five lines), Backlog (top three plus parked), Completed (Mission v1.0.0, v1.1.0); founding card replaced
+2026-10-01  Greg & Claude  1.1.1          Home Last verified: first wire delivery, verified-written by the courier
+=============================================================== -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mai-project" content="project-opencertification">
+<meta name="mai-founded" content="2026-10-01 08:07:26 PM CDT">
+<meta name="mai-template-version" content="2.0.0">
+<title>PROJECT-OPENCERTIFICATION — Living Dashboard</title>
+<link rel="stylesheet" href="_framework/styles.css">
+</head>
+<body>
+
+<script>
+  /* Identity — the only configuration a page carries. */
+  window.DASH_PROJECT = 'project-opencertification';
+  window.DASH_NAME    = 'PROJECT-OPENCERTIFICATION';
+  window.DASH_FOUNDED = '2026-10-01 08:07:26 PM CDT';
+</script>
+
+<!-- ============================================================
+     AUTHORED CONTENT — everything inside #authored belongs to
+     this project: boards, anatomy, laws, diagrams. Give every
+     section a stable id (the anchor law); the engine observes
+     them and builds the nav automatically. Everything OUTSIDE
+     this container is built by the engine at load — do not add
+     structure to this file.
+     ============================================================ -->
+<div id="authored">
+
+<!-- HOME: law 12, five lines, above the fold. Updated at every sync point. -->
+<section id="home">
+  <h2>HOME <span class="tag">what to do next, and how far it is from done</span></h2>
+  <div class="boards">
+    <div class="card">
+      <h3>NOW</h3>
+      <div class="row"><span class="k">Doing</span><span class="s g-plan">○</span><span class="n">Nothing open. Feature 1 finished; Feature 2 not yet opened</span></div>
+      <div class="row"><span class="k">Done when</span><span class="s g-plan">○</span><span class="n">Set when Feature 2 opens</span></div>
+      <div class="row"><span class="k">Call</span><span class="s g-live">●</span><span class="n">Open Feature 2, Apprentice Body of Knowledge outline?</span></div>
+      <div class="row"><span class="k">Last verified</span><span class="s g-done">●</span><span class="n">2026-10-01 08:30 PM: first wire delivery of this page, verified-written</span></div>
+      <div class="row"><span class="k">Next</span><span class="s g-plan">○</span><span class="n">Feature 2: Apprentice Body of Knowledge outline</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BACKLOG: top three carry numbers; parked items earn a number only by displacing one. -->
+<section id="backlog">
+  <h2>BACKLOG <span class="tag">features not started, highest value first</span></h2>
+  <div class="boards">
+    <div class="card" id="bl-top">
+      <h3>TOP THREE</h3>
+      <div class="row"><span class="k">2</span><span class="s g-plan">○</span><span class="n">Apprentice BoK outline. Done when: every topic has its Why; Greg and Randy agree</span></div>
+      <div class="row"><span class="k">3</span><span class="s g-plan">○</span><span class="n">Apprentice evaluation. Done when: rubric and one work sample runnable next month</span></div>
+      <div class="row"><span class="k">4</span><span class="s g-plan">○</span><span class="n">Seal and Journey Book format. Done when: sample Seal and entry, with lineage</span></div>
+    </div>
+    <div class="card" id="bl-parked">
+      <h3>PARKED</h3>
+      <div class="row"><span class="k">License</span><span class="s g-plan">○</span><span class="n">Open license for Guild content, before outside contributions</span></div>
+      <div class="row"><span class="k">Funding</span><span class="s g-plan">○</span><span class="n">Operating costs (e.g. Journey Book registry); never candidate fees</span></div>
+      <div class="row"><span class="k">Fee source</span><span class="s g-plan">○</span><span class="n">Record original source and date of the ISTQB Rwanda fee table</span></div>
+      <div class="row"><span class="k">Names</span><span class="s g-plan">○</span><span class="n">Guild and chapter names, ratified by members</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLETED: law 15, the trophy room. Finished features move here whole and dated. -->
+<section id="completed">
+  <h2>COMPLETED <span class="tag">finished work, displayed not buried</span></h2>
+  <div class="boards">
+    <div class="card" id="c-mission-100">
+      <h3>MISSION DIRECTIVE v1.0.0 · DONE 2026-10-01</h3>
+      <div class="row"><span class="k">Interview</span><span class="s g-done">●</span><span class="n">Seven mission assets gathered; summary confirmed by Greg</span></div>
+      <div class="row"><span class="k">Files</span><span class="s g-done">●</span><span class="n">01 to 04 mission files written at v1.0.0</span></div>
+      <div class="row"><span class="k">Repository</span><span class="s g-done">●</span><span class="n">GitHub repo created; mission consolidated into Project files</span></div>
+    </div>
+    <div class="card" id="c-mission-110">
+      <h3>FEATURE 1: MISSION v1.1.0 · DONE 2026-10-01</h3>
+      <div class="row"><span class="k">Repository row</span><span class="s g-done">●</span><span class="n">03 Current State reflects the created repo and dashboard</span></div>
+      <div class="row"><span class="k">License row</span><span class="s g-done">●</span><span class="n">Guild content license added to Open Decisions</span></div>
+      <div class="row"><span class="k">Live in Project</span><span class="s g-done">●</span><span class="n">Relaunched and uploaded; confirmed by full read at 08:23 PM</span></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script src="_framework/dashboard.js"></script>
+</body>
+</html>
