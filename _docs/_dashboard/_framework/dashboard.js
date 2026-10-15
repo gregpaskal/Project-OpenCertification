@@ -1,8 +1,8 @@
 // ===============================================================
 // @file: dashboard.js
 // @filepath: dashboard_engine/_framework/dashboard.js
-// @version: 2.5.1
-// @updated: 2026-09-12 08:52:19 AM CDT
+// @version: 2.5.3
+// @updated: 2026-10-13 05:45:51 PM CDT
 // @author: Greg Paskal & Claude
 // @company: MissionWares®
 // @description: Shared site behavior for the living dashboard —
@@ -48,17 +48,7 @@
 // @changeLog:
 // Date        Author         Version        Description
 // ----------  -------------  -------------  --------------------------
-// 2026-07-27  Greg & Claude  1.0.0–1.3.0    Born (zoom component self-owned, app-shell layout) → THE WIRE Phase 1 page side (NOW strip, EventSource, anchor jump, chime) → promoted from VectorPal and re-homed as the ENGINE EDITION with per-page DASH_PROJECT [pruned 2026-09-05; spans 2026-07-27→]
-// 2026-07-30  Greg & Claude  1.4.0–1.16.1   LIVE BOARDS from kind:board with chunk reassembly → file:// CORS fix (boards-data.js via <script src>) → THE THIN SHELL (engine builds all structure) → ledger pages, SITE NAV from the courier manifest, self-reload on own delivery → ZOOM dropdown, STATUS KEY → COMPLETION LIFECYCLE (retired boards celebrate and poof) → COURIER SILENT detector with canonical-JSON compare and self-heal → CHANGE VISIBILITY glow, while-you-were-away diff, nav UPDATED badge → engine announces DASH_ENGINE_VERSION → cross-project cache bleed fixed with project-suffixed keys [pruned 2026-09-05; spans 2026-07-29→]
-// 2026-08-02  Greg & Claude  1.17.0–1.25.0  THE PAGE LEARNS TO RECONNECT (backoff, ?since= replay, WIRE OFFLINE toast) → THE DISK WATCH (4s loop, disk is the truth, wire only nudges) + STAMP STRIP → case-insensitive project match → two fingerprints, two labels, tooltips → sound ownership and honest audio state → THE VOICES (arrival/attention/question/alert cadences) sounded from the watch, not the payload → any-touch arming → METHODOLOGY SEED from stamp-data.js → phantom cadence killed (baseline is not an event) → live glow preserved across sweep adoption → HERE-badge [pruned 2026-09-05; spans 2026-08-02→]
-// 2026-08-07  Greg & Claude  1.26.0–1.26.2  THE WARNING TELLS THE TRUE STORY — receipt verdicts observed: DELIVERY REFUSED toast quoting the courier, success is the named list and every other verdict refuses → runtime ENGINE_VERSION reconverged with the header (second occurrence; the durable gate belongs at the snapshot step) [pruned 2026-09-05; spans 2026-08-07→]
-// 2026-08-13  Greg & Claude  1.27.0         THE KEY GOES EVERYWHERE (Greg's placement) — header becomes a flex row: title + stamp strip in a left column, the STATUS KEY floats right, vertically centered, on EVERY page; the main-instrument-only copy in the boards region is removed (one owner). Born of the Development page's build lists: status dots now speak on secondary pages, and the vocabulary legend belongs wherever the vocabulary is spoken. Runtime ENGINE_VERSION synced in the same edit
-// 2026-08-13  Greg & Claude  1.27.1         KEY ONTO THE STAMP ROW (Greg's placement tuning of 1.27.0) — header returns to a stacked block; row 2 is a flex line (.hrow2) holding the stamp strip left and the STATUS KEY floating balanced in the space between the strip's end and the zoom control; hleft wrapper retired; runtime ENGINE_VERSION synced in the same edit
-// 2026-08-13  Greg & Claude  1.28.0         THE RELOAD THAT SURVIVES A THROTTLED TAB (Greg: "critical that I can see the progress" — Home flashes Updated while the open Development tab shows old dots). Honest finding first: 1.27.1's machinery reads correct — mine+finalPiece → reloadWhenSelfLands, bounded 6s then reloads regardless — yet the tab observably stalls, so the fix hardens AND instruments rather than guesses. (1) every file payload logs its gate verdicts (mine/finalPiece) to the tab's own console, so a dropped delivery leaves evidence; (2) self-delivery marks a PERSISTED pending-reload flag before attempting — browser tab throttling can stretch timers indefinitely in background tabs, and the flag is the second chance: fired the instant the tab is seen again (visibilitychange/focus) or at next boot, cleared on the reload itself so it fires once; (3) an amber PAGE UPDATE LANDING toast at the moment of hearing, so the landing is visible even before the reload; runtime ENGINE_VERSION synced
-// 2026-08-13  Greg & Claude  1.28.1         HISTORY IS NOT NEWS (found by 1.28.0's own instrumentation, first live test) — the live reload FIRED correctly, then the wire's catch-up replay fed the day's OLD self-payloads back and every replayed final chunk re-fired the reload, looping the page until the since-marker caught up. A replayed payload describes bytes this page already booted from. Fix: the ntfy envelope's own timestamp rides into handlePayload (payload.__envTime); a payload older than PAGE_BOOT_MS - 10s is [replay] — logged as such, never reloads, falls through to the disk watch like any other asset; live payloads behave exactly as 1.28.0. Runtime ENGINE_VERSION synced
-// 2026-08-13  Greg & Claude  1.28.2         MEMORY, NOT CLOCK ARITHMETIC (second live test: one clean reload, whole day [replay]-suppressed, then the triggering transfer's own tail chunks replayed INSIDE the 10s grace and re-fired one extra reload — a chunked transfer spans longer than any sane window, so no time cutoff can separate "the delivery I just consumed" from "a new one"). Fix: the trigger's envelope time persists as the CONSUMED STAMP at the moment of action; only strictly newer self-payloads may reload, ever — replays of the consumed delivery log [consumed] and fall through; boot-window [replay] tag kept for the log. Runtime ENGINE_VERSION synced
-// 2026-08-13  Greg & Claude  1.29.0         THE PAGE REMEMBERS WHAT CHANGED (Greg, watching the self-reload work: "there is no persisting indicator of what was updated") — the wire said THAT, the reload erased the WHAT. Every .row is fingerprinted (djb2 over textContent, keyed by its .k label); after any reload, rows differing from the last ACKNOWLEDGED state carry an ember left edge + UPDATED pill, persisting across reloads until the row is clicked (click = acknowledge, per-row, stored). New rows flag too. First-ever visit seeds the baseline silently — a baseline is not an event (1.23.1's lesson applied on purpose). Runtime ENGINE_VERSION synced
-// 2026-08-13  Greg & Claude  1.29.1         THE PAGE NAMES ITSELF (Greg's catch on the multi-page test: Home said UPDATED, "Development should say updated next to it but it does not") — the 1.25.0 here-badge clears on refresh, which is exactly wrong for a self-reloading page: the refresh IS the delivery. The badge now rides the pills: initRowChangeTracking lights it when unacknowledged pills exist (markHereUpdated, same renderer), and the LAST acknowledged pill puts it out (new clearHereUpdated) — badge and pills always agree; boards pages untouched. Runtime ENGINE_VERSION synced
+// 2026-08-13  Greg & Claude  1.0.0–1.29.1   [pruned 2026-10-03; spans 2026-07-27→] Born, live boards, the page learns to reconnect, the warning, the key, the reload, memory and the page that names itself
 // 2026-08-13  Greg & Claude  1.30.0         THE ONE LEDGER (Greg's rulings R4 + his six needs, after the badge flickered between pages: "I think we are starting to lose the real thing I am after... I have you bolting on features") — three overlapping mechanisms (cross-page pending, runtime here-badge, row pills) collapse into ONE persisted dirty map; the nav badge on EVERY page, including the one being viewed, is a view of that map and nothing else. Set by deliveries (file → that page; board → index). Cleared ONLY by acknowledgment: a static page's last pill clicked, a clean boot (content matches acknowledged state), or Home's boards painting while actually watched (witnessBoards — a paint behind your back keeps the badge). Navigation consumes NOTHING; survives visits, reloads, close-and-reopen. markPagePending kept as a converging wrapper; here-badge functions become ledger views; seen-map machinery swept as dead code. Runtime ENGINE_VERSION synced
 // 2026-08-13  Greg & Claude  1.30.1         WATCHED AND CURRENT IS ACKNOWLEDGED (Greg: "there is an updated notification next to Home and I can't find any way to tell it whatever it was marking as updated was never set") — the ledger's only Home clear path fired when a NEW glow painted, so a visit that found boards already matching disk could never witness, and the badge stuck forever. Now every WATCHED adoption witnesses: identical-content adoption, and no-glow repaints, both call witnessBoards; rowless static pages clear themselves on view for the same reason (nothing trackable = nothing unacknowledged). Hidden-tab paints still keep the badge. Runtime ENGINE_VERSION synced
 // 2026-09-05  Greg & Claude  2.0.0          THE ROUTING KEY IS DECLARED, NEVER GUESSED (MAJOR: a page without window.DASH_PROJECT no longer boots — visible banner + thrown error, replacing the silent vectorpal fallback that could route another project onto an undeclared page); PROJECT resolved once at the top; dead readPending/PENDING_KEY swept; injected CSS moved to styles.css 1.3.0 (one style owner, Gate 1 can see it); changelog pruned to range lines + recent 10 and 1.30.0/1.30.1 order restored; ENGINE_VERSION synced (assessment KNOWN FIXES rows 7–9)
@@ -68,12 +58,14 @@
 // 2026-09-05  Greg & Claude  2.4.0          THE DECK (Greg: bump it up, ticks, rollover, scrolling; the LIVE heading is pointless) — Home opens with an instrument deck: THE WIRE strip taller with 3-hour ticks and local-hour labels, per-bar rollover metrics, re-drawn every minute so time scrolls; beside it THE PULSE tile (last heard, last verdict, busiest hour, since midnight) from the same log. The LIVE heading becomes THE EDGE (law 12's own word) with an honest empty state
 // 2026-09-12  Greg & Claude  2.5.0          WORK FIRST (Greg, Road Warrior Chat 05: four titles that mean nothing; what would I do next with an hour?) — Home is built authored content first, live boards directly beneath with no heading, and the deck collapsed to one quiet wire line at the bottom (click to open the chart); THE EDGE heading, its nav link and the 'nothing in flight' strip are gone (the strip never saw a .wb-card anyway); every board card counts itself per Core_03 2.14.0 — done/total, a bar, +growth against stepsAtStart, orange GROWING past +50%
 // 2026-09-12  Greg & Claude  2.5.1          The wire line opens with a chevron (Greg): ▸ closed, ▾ open, turning on click, state kept across loads and reloads; the show/hide words go
+// 2026-10-03  Greg & Claude  2.5.2          Secondary pages (Backlog, Completed) put their content into main, so their nav shows as Home's does (Greg: no navigation there)
+// 2026-10-13  Greg & Claude  2.5.3          Refusal notices tell the truth (Greg, the project file lane's first test run): deleted and renamed count as success, not refusals; the notice names its verdict and gives that verdict's own advice (Launch only for dropped-auth; rule, path, conflict, transfer and project each get theirs); the heal line no longer claims "back in sync"
 // ===============================================================
 
 (function () {
   // The engine announces itself — type DASH_ENGINE_VERSION in the
   // browser console to verify which engine a page is running.
-  var ENGINE_VERSION = '2.5.1';
+  var ENGINE_VERSION = '2.5.3';
   // 1.28.1: this page's birth moment — the line between replayed
   // history (older, never reloads) and live news (may reload).
   var PAGE_BOOT_MS = Date.now();
@@ -757,7 +749,7 @@
       main.appendChild(deck);
     }
     var authored = document.getElementById('authored');
-    if (authored && !authored.parentNode) { main.appendChild(authored); }
+    if (authored && authored.parentNode !== main) { main.appendChild(authored); }   // 2.5.2 (Greg: Backlog and Completed have no navigation): a secondary page's authored content goes into main too; it sat in the body under the frame, the nav squeezed above it
 
     // Nav — OBSERVED from what actually exists, never a stale list:
     // Live anchor, then one link per authored section[id].
@@ -1426,7 +1418,11 @@
     // `malformed`): success is the NAMED list; every other verdict
     // is the courier running and refusing — the REFUSED story.
     // A refusal word the courier grows tomorrow is covered today.
-    var success = verdict.indexOf('verified') === 0 || verdict === 'executed';
+    // 2.5.3: deleted and renamed are the courier SUCCEEDING (a delete
+    // since courier 2.2.0, a rename since 2.17.0). Left off this list
+    // they toasted as refusals, which is the false alarm the list exists
+    // to prevent.
+    var success = verdict.indexOf('verified') === 0 || verdict === 'executed' || verdict === 'deleted' || verdict === 'renamed';
     if (!success) {
       // The courier ANSWERED. A pending silence check would layer
       // the off/disarmed story on top of a courier that is running
@@ -1440,7 +1436,7 @@
           toasts[i].parentNode.removeChild(toasts[i]);
         }
       }
-      showCourierRefusal(String(p.detail || verdict));
+      showCourierRefusal(String(p.detail || verdict), verdict);
       return;
     }
     // A success while the refusal shows means auth is whole again —
@@ -1448,18 +1444,33 @@
     if (refusalToast && refusalToast.el.parentNode) {
       var t = refusalToast; refusalToast = null;
       t.el.classList.add('healed');
-      t.msg.textContent = '\u2713 COURIER VERIFIED \u2014 a later delivery landed. Back in sync.';
+      t.msg.textContent = '\u2713 COURIER VERIFIED: a later delivery landed.';
       if (t.btn.parentNode) t.btn.parentNode.removeChild(t.btn);
       setTimeout(function () { dismissCourierWarning(t.el); }, 4000);
     }
   }
 
-  function showCourierRefusal(detail) {
+  // 2.5.3 (Greg, the file lane's first test run): the advice follows
+  // the verdict. "Run Launch" only fixes dropped-auth; under a rule,
+  // conflict or fixed refusal it sent the reader to fix the wrong thing.
+  function refusalAdvice(verdict) {
+    switch (verdict) {
+      case 'dropped-auth': return 'If the methodology was edited, run Launch in AiAssist to re-stamp, then resend.';
+      case 'dropped-rule': return 'This project\u2019s file lane does not allow it. Copy the file by hand, or add a rule in AiAssist.';
+      case 'dropped-path': return 'That location is never reachable over the wire. Copy the file by hand.';
+      case 'dropped-conflict': return 'The file on disk is not the one the sender read. The sender re-reads it and resends.';
+      case 'dropped-transfer': return 'The file did not arrive whole. The sender resends it.';
+      case 'dropped-project': return 'This project is not registered in the Navigation Bay.';
+      default: return 'The message itself was refused. The sender corrects it and resends.';
+    }
+  }
+
+  function showCourierRefusal(detail, verdict) {
     if (refusalToast && refusalToast.el.parentNode) return;
     var warn = document.createElement('div');
     warn.className = 'courier-warn';
     var msg = document.createElement('div');
-    msg.textContent = '\u26A0 DELIVERY REFUSED \u2014 the courier is running but refused this delivery: \u201C' + detail + '\u201D If the methodology was edited, run Launch in AiAssist to re-stamp, then resend.';
+    msg.textContent = '\u26A0 DELIVERY REFUSED (' + (verdict || 'refused') + '): \u201C' + detail + '\u201D ' + refusalAdvice(verdict);
     var x = document.createElement('button');
     x.textContent = 'DISMISS';
     x.addEventListener('click', function () { refusalToast = null; dismissCourierWarning(warn); });

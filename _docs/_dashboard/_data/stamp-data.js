@@ -1,6 +1,6 @@
 window.DASH_STAMP = {
-  "enginePhrase" : "Hover-Peanut-Wide",
+  "enginePhrase" : "Worry-Found-Mail",
   "methodologyPhrase" : "Trial-Install-Sell",
-  "stampedAt" : "2026-10-01 08:22:14 PM CDT",
+  "stampedAt" : "2026-10-14 12:21:35 PM CDT",
   "v" : 1
 };
