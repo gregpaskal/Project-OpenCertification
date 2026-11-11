@@ -1,8 +1,8 @@
 # ===============================================================
 # @file: .gitignore
 # @filepath: .gitignore
-# @version: 5.2
-# @updated: 2026-05-10 11:43:00 AM CDT
+# @version: 5.3
+# @updated: 2026-11-10 07:34:09 PM CST
 # @author: Greg Paskal
 # @company: MissionWares
 #
@@ -25,6 +25,7 @@
 #   10 - Allure Report Artifacts
 #   11 - Private / Sensitive Files
 #   12 - AI Assist / Generated Files
+#   13 - mAi Lab
 #
 # @dependencies:
 #   - Git version control system
@@ -49,6 +50,7 @@
 # 2026-04-09  G. Paskal       5.0      Added Android / Android Studio
 # 2026-05-10  G. Paskal       5.1      Added AI Assist generated files
 # 2026-05-28  G. Paskal       5.2      Assws additional generated file rule
+# 2026-11-10  G. Paskal       5.3      Added mAi Lab run history
 # ===============================================================
 
 
@@ -145,3 +147,9 @@ allure-results
 # ---------------------------------------------------------------
 .missionwares/AiAssist/generated/
 **/.missionwares/AiAssist/generated/**
+
+
+# ---------------------------------------------------------------
+# 13 - MAI LAB
+# ---------------------------------------------------------------
+_lab_record/
