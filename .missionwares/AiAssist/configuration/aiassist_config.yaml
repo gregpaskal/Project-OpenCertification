@@ -2,8 +2,8 @@
 # @title mAi - AI Assist Configuration
 # @file aiassist_config.yaml
 # @filepath .missionwares/AiAssist/configuration/aiassist_config.yaml
-# @project Project-OpenCertification
-# @version 4.4.0
+# @project Project-mAi-Methodology
+# @version 4.5.0
 # @updated 2026-10-29 06:18:40 PM CDT
 #
 # @description
@@ -128,8 +128,7 @@ dashboard_engine:
   templates:
     index: index.html
   framework:
-    - _framework/dashboard.js
-    - _framework/styles.css
+    - _framework/
 
 # ---------------------------------------------------------------
 # Wire — THE COURIER fleet listener channel.
