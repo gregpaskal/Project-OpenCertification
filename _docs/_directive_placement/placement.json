@@ -1,0 +1,22 @@
+{
+  "schema": "1.0.0",
+  "chat": null,
+  "placedAt": "2026-11-15 12:05:05 PM CST",
+  "files": [
+    {
+      "file": "AI_Directive_Methodology.md",
+      "sha256": "456baafedc772e3ac46b240032a0374d50703d5d154128a6f0cccc403a34bc54",
+      "bytes": 279580
+    },
+    {
+      "file": "AI_Directive_Mission.md",
+      "sha256": "7f6ca8b13754ebadf06c7ff9dee8c1c32da47fc3f360e44f6d711b87bb7cd742",
+      "bytes": 18091
+    },
+    {
+      "file": "AI_Directive_Tools.md",
+      "sha256": "6877cbca6e541354cf1d20ea3773ea90e98480b4f2e5d6b568e3b617d1ef8ed9",
+      "bytes": 159275
+    }
+  ]
+}
