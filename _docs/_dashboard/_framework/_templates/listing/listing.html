@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- ===============================================================
+@file: listing.html
+@filepath: dashboard_engine/_framework/_templates/listing/listing.html
+@version: 1.0.0
+@updated: 2026-11-13 09:07:14 AM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Listing page type's starting page, founded as {{PAGE_SLUG}}.html at a project's dashboard root (tokens
+  swapped, founding refused if any token survives). A FOUNDED file: it belongs to the project from birth and is never
+  overwritten; it carries only identity (the DASH_* variables and the mai-* meta tags) and its authored sections. The
+  menu shows MENU_NAME (the page title, as Diagrams does); the header and the section heading show PAGE_TITLE.
+  The stamped engine builds the shell; _framework/_templates/listing/listing.js draws the table from
+  {{PAGE_SLUG}}/{{PAGE_SLUG}}-data.js. Previewed at the engine home, the unswapped tokens rendering as literal text are
+  the tell that this is the template.
+@tags: template, page-type, listing, table, thin-shell, living-dashboard
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-13  Greg & Claude  1.0.0          The Listing page type's starting page, harvested from Project-mAi-Methodology dashboard-templates.html 1.0.0: one listing section, page-type identity meta tags, the page's name and title chosen at founding
+=============================================================== -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mai-project" content="{{PROJECT_KEY}}">
+<meta name="mai-founded" content="{{FOUNDED_AT}}">
+<meta name="mai-page-type" content="listing">
+<meta name="mai-page-template-version" content="1.0.0">
+<title>{{MENU_NAME}}</title>
+<link rel="stylesheet" href="_framework/styles.css">
+<link rel="stylesheet" href="_framework/_templates/listing/listing.css">
+</head>
+<body>
+
+<script>
+  /* Identity: the only configuration a page carries. */
+  window.DASH_PROJECT = '{{PROJECT_KEY}}';
+  window.DASH_NAME    = '{{PROJECT_NAME}}';
+  window.DASH_PAGE    = '{{PAGE_TITLE}}';
+  window.DASH_HOME    = 'index.html';
+  window.DASH_FOUNDED = '{{FOUNDED_AT}}';
+</script>
+
+<div id="authored">
+
+<section id="listing">
+  <h2>{{PAGE_TITLE}} <span class="tag" id="lst-count">loading</span></h2>
+  <p class="lst-intro">{{PAGE_INTRO}}</p>
+  <div class="lst-table-mount" data-source="DASH_LISTING" data-count="lst-count" data-missing="Its data file, {{PAGE_SLUG}}/{{PAGE_SLUG}}-data.js, was not found beside this page."></div>
+</section>
+
+</div>
+
+<script src="_framework/dashboard.js"></script>
+<script src="{{PAGE_SLUG}}/{{PAGE_SLUG}}-data.js"></script>
+<script src="_framework/_templates/listing/listing.js"></script>
+</body>
+</html>

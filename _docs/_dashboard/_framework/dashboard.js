@@ -1,8 +1,8 @@
 // ===============================================================
 // @file: dashboard.js
 // @filepath: dashboard_engine/_framework/dashboard.js
-// @version: 2.5.3
-// @updated: 2026-10-13 05:45:51 PM CDT
+// @version: 2.9.0
+// @updated: 2026-11-14 08:36:11 AM CST
 // @author: Greg Paskal & Claude
 // @company: MissionWares®
 // @description: Shared site behavior for the living dashboard —
@@ -48,24 +48,23 @@
 // @changeLog:
 // Date        Author         Version        Description
 // ----------  -------------  -------------  --------------------------
-// 2026-08-13  Greg & Claude  1.0.0–1.29.1   [pruned 2026-10-03; spans 2026-07-27→] Born, live boards, the page learns to reconnect, the warning, the key, the reload, memory and the page that names itself
-// 2026-08-13  Greg & Claude  1.30.0         THE ONE LEDGER (Greg's rulings R4 + his six needs, after the badge flickered between pages: "I think we are starting to lose the real thing I am after... I have you bolting on features") — three overlapping mechanisms (cross-page pending, runtime here-badge, row pills) collapse into ONE persisted dirty map; the nav badge on EVERY page, including the one being viewed, is a view of that map and nothing else. Set by deliveries (file → that page; board → index). Cleared ONLY by acknowledgment: a static page's last pill clicked, a clean boot (content matches acknowledged state), or Home's boards painting while actually watched (witnessBoards — a paint behind your back keeps the badge). Navigation consumes NOTHING; survives visits, reloads, close-and-reopen. markPagePending kept as a converging wrapper; here-badge functions become ledger views; seen-map machinery swept as dead code. Runtime ENGINE_VERSION synced
-// 2026-08-13  Greg & Claude  1.30.1         WATCHED AND CURRENT IS ACKNOWLEDGED (Greg: "there is an updated notification next to Home and I can't find any way to tell it whatever it was marking as updated was never set") — the ledger's only Home clear path fired when a NEW glow painted, so a visit that found boards already matching disk could never witness, and the badge stuck forever. Now every WATCHED adoption witnesses: identical-content adoption, and no-glow repaints, both call witnessBoards; rowless static pages clear themselves on view for the same reason (nothing trackable = nothing unacknowledged). Hidden-tab paints still keep the badge. Runtime ENGINE_VERSION synced
-// 2026-09-05  Greg & Claude  2.0.0          THE ROUTING KEY IS DECLARED, NEVER GUESSED (MAJOR: a page without window.DASH_PROJECT no longer boots — visible banner + thrown error, replacing the silent vectorpal fallback that could route another project onto an undeclared page); PROJECT resolved once at the top; dead readPending/PENDING_KEY swept; injected CSS moved to styles.css 1.3.0 (one style owner, Gate 1 can see it); changelog pruned to range lines + recent 10 and 1.30.0/1.30.1 order restored; ENGINE_VERSION synced (assessment KNOWN FIXES rows 7–9)
-// 2026-09-05  Greg & Claude  2.1.0          ONE KEY NAMESPACE (Greg) — every localStorage key is mai-* (vp-dash-*/vp-wire-* were the VectorPal-era spelling); a one-time boot migration copies each old key's value under the new name and removes the old key, so caches, zoom, sound state and the wire high-water mark survive the rename (assessment NEEDS A CALL row 12)
-// 2026-09-05  Greg & Claude  2.2.0          ACKNOWLEDGMENT BY PAGE (Greg: "I like the pills, not clicking all of them") — an ACKNOWLEDGE ALL control clears every UPDATED pill on the page in one click, and a page that stays visible on screen for ~6s clears its own pills (law 13's "actually watched", extended from Home to every page; law 11: awareness, never obligation). Per-row clicks remain
-// 2026-09-05  Greg & Claude  2.3.0          THE WIRE STRIP (Greg's Home instrument #4) — Home draws a 24-hour sparkline of wire traffic for this project: deliveries (board/file/command) cyan, verified receipts green, refusals amber, one bar per hour. Fed from every payload the page hears, seeded on open from the relay's 24h cache (one poll), persisted 48h in localStorage, deduped by message id. Law 12: it shows the edge's pulse, nothing authored
+// 2026-09-05  Greg & Claude  1.0.0–2.3.0    [pruned 2026-11-12 and 2026-11-14; spans 2026-07-27→] THE WIRE STRIP, a 24-hour sparkline of this project's wire traffic on Home (2.3.0); Born, live boards, the page learns to reconnect, the warning, the key, the reload, memory and the page that names itself; THE ONE LEDGER and its acknowledgment by watching; the routing key declared, never guessed; one mai-* key namespace; ACKNOWLEDGE ALL and the 6 s dwell that clears a page's pills
 // 2026-09-05  Greg & Claude  2.4.0          THE DECK (Greg: bump it up, ticks, rollover, scrolling; the LIVE heading is pointless) — Home opens with an instrument deck: THE WIRE strip taller with 3-hour ticks and local-hour labels, per-bar rollover metrics, re-drawn every minute so time scrolls; beside it THE PULSE tile (last heard, last verdict, busiest hour, since midnight) from the same log. The LIVE heading becomes THE EDGE (law 12's own word) with an honest empty state
 // 2026-09-12  Greg & Claude  2.5.0          WORK FIRST (Greg, Road Warrior Chat 05: four titles that mean nothing; what would I do next with an hour?) — Home is built authored content first, live boards directly beneath with no heading, and the deck collapsed to one quiet wire line at the bottom (click to open the chart); THE EDGE heading, its nav link and the 'nothing in flight' strip are gone (the strip never saw a .wb-card anyway); every board card counts itself per Core_03 2.14.0 — done/total, a bar, +growth against stepsAtStart, orange GROWING past +50%
 // 2026-09-12  Greg & Claude  2.5.1          The wire line opens with a chevron (Greg): ▸ closed, ▾ open, turning on click, state kept across loads and reloads; the show/hide words go
 // 2026-10-03  Greg & Claude  2.5.2          Secondary pages (Backlog, Completed) put their content into main, so their nav shows as Home's does (Greg: no navigation there)
 // 2026-10-13  Greg & Claude  2.5.3          Refusal notices tell the truth (Greg, the project file lane's first test run): deleted and renamed count as success, not refusals; the notice names its verdict and gives that verdict's own advice (Launch only for dropped-auth; rule, path, conflict, transfer and project each get theirs); the heal line no longer claims "back in sync"
+// 2026-10-14  Greg & Claude  2.6.0          AUDIT J ITEMS (AiAssist Session 32 code audit): payload anchors accepted only as in-page #ids, so a javascript: link can no longer be stored or run (J-01); a refused board repaints from disk (J-03); renamed counts as success on the wire strip (J-08); a path-form file delivery reloads its page (J-09); probe scripts removed once loaded (J-10); the 24 h seed is one batch, not quadratic (J-11); board ids escaped in selectors (J-12); the ACKNOWLEDGE ALL visibility listener removed with the control (J-13); a liveness watchdog reconnects a connection silent for 150 s (J-14); one nudge at a time and chunk transfers expire after 2 min (J-15); runtime ENGINE_VERSION synced
+// 2026-10-26  Greg & Claude  2.7.0          The Lanes page from _data/lanes-data.js (Core_03); runtime ENGINE_VERSION synced
+// 2026-10-26  Greg & Claude  2.7.1          A run lane receipt no longer shows DELIVERY REFUSED (Greg saw a run's "started" called refused); one success list for the notice and the wire strip adds started, finished, killed and timed-out; runtime ENGINE_VERSION synced
+// 2026-11-12  Greg & Claude  2.8.0          PAGE ORDER (Greg: sortable pages, spacing and dividers the user sets, remembered): ARRANGE on the PAGES heading opens the arranger (drag or up/down, + SPACE, + LINE, + HEADING, DONE/CANCEL/RESET); the layout is kept per project in browser storage and laid over the manifest at every render (new pages join at the end, removed ones drop); Lanes takes part; runtime ENGINE_VERSION synced
+// 2026-11-14  Greg & Claude  2.9.0          THE TOOLS PHRASE ON THE STRIP (Greg, AiAssist chat 36): a tools cell beside methodology and dashboard, from stamp-data.js toolsPhrase (written by AiAssist at Launch), repainted with the stamp; runtime ENGINE_VERSION synced
 // ===============================================================
 
 (function () {
   // The engine announces itself — type DASH_ENGINE_VERSION in the
   // browser console to verify which engine a page is running.
-  var ENGINE_VERSION = '2.5.3';
+  var ENGINE_VERSION = '2.9.0';
   // 1.28.1: this page's birth moment — the line between replayed
   // history (older, never reloads) and live news (may reload).
   var PAGE_BOOT_MS = Date.now();
@@ -250,42 +249,393 @@
     return pages;
   }
 
-  function renderPagesGroup(nav) {
-    // Remove a previous render (live rebuild replaces in place).
-    nav.querySelectorAll('.pages-item, .pages-cap').forEach(function (el) { el.remove(); });
+  // --- 2.8.0: PAGE ORDER (Greg, 2026-11-12) ------------------------
+  // The PAGES menu is the user's to arrange: the order of the pages, and spaces, lines and headings between them that
+  // group the menu into a structure the user sets. The ARRANGE button on the PAGES heading opens the arranger; DONE
+  // saves, CANCEL leaves the menu as it was, RESET goes back to the manifest order (saved only by DONE).
+  //
+  // What is saved is the user's layout, never the page list: the courier's manifest (site-data.js) stays the truth of
+  // which pages exist. At every render the layout is laid over the manifest (arrangeEntries): a page the layout names
+  // and the manifest holds takes its saved place; a page the manifest holds and the layout does not name (one founded
+  // since) joins at the end; a page the manifest no longer holds is not drawn. So a new page is never hidden by an old
+  // layout, and a removed page leaves no dead link.
+  //
+  // Where it is kept: this browser's storage, one key per project (mai-nav-layout--<project>), like the zoom and the
+  // UPDATED ledger. The page cannot write a file (file:// and the wire's rules both forbid it), so a second browser or
+  // a second Mac starts from the manifest order until it is arranged there too.
+  var LAYOUT_KEY = 'mai-nav-layout--' + PROJECT;
+  var LAYOUT_HEAD_MAX = 40;
+  var navEdit = null;      // the arranger's draft while it is open; null when the menu is shown
+  var navEditSeq = 0;      // gives each draft row a key, so focus can follow a row after it moves
 
-    var cap = navCap('PAGES'); cap.classList.add('pages-cap');
-    var anchor = nav.firstChild;
-    nav.insertBefore(cap, anchor);
+  function cleanLayoutItem(it) {
+    if (!it || typeof it !== 'object') { return null; }
+    if (it.t === 'page' && typeof it.href === 'string' && it.href) { return { t: 'page', href: it.href }; }
+    if (it.t === 'space' || it.t === 'line') { return { t: it.t }; }
+    if (it.t === 'head' && typeof it.label === 'string') { return { t: 'head', label: it.label.trim().slice(0, LAYOUT_HEAD_MAX) }; }
+    return null;
+  }
+  function readLayout() {
+    var o = null;
+    try { o = JSON.parse(localStorage.getItem(LAYOUT_KEY)); } catch (e) { o = null; }
+    if (!o || !Array.isArray(o.items)) { return null; }
+    return o.items.map(cleanLayoutItem).filter(function (it) { return it; });
+  }
+  // Saves the layout, or clears it when it is exactly the manifest order with no separators (nothing left to remember).
+  function writeLayout(items) {
+    var out = items.map(cleanLayoutItem).filter(function (it) { return it && !(it.t === 'head' && !it.label); });
+    var plain = arrangeEntries(null).map(function (e) { return e.href; }).join('\n');
+    var mine = out.map(function (it) { return it.t === 'page' ? it.href : '\u0000' + it.t; }).join('\n');
+    try {
+      if (mine === plain) { localStorage.removeItem(LAYOUT_KEY); }
+      else { localStorage.setItem(LAYOUT_KEY, JSON.stringify({ v: 1, at: new Date().toISOString(), items: out })); }
+    } catch (e) {}
+  }
 
-    var here = currentPageFile();
-    var dirty = readDirty();
-
+  // Every page the menu can show right now, in the manifest's order: the manifest's pages, then Lanes while its data
+  // exists (2.7.0: engine-built, never in the manifest, always on Home at index.html#lanes).
+  function availablePages() {
+    var out = [];
     sitePages().forEach(function (p) {
-      if (!p || !p.href) { return; }
-      var a = document.createElement('a');
-      a.className = 'pages-item';
-      a.href = p.href;
-      // Nav convention (Greg, 2026-07-30): the home page is called
-      // "Home" — the manifest keeps the page's true observed title;
-      // presentation names the start point by its role.
-      a.textContent = (p.href === 'index.html') ? 'Home' : (p.label || p.href);
-      var isHere = p.href.toLowerCase() === here;
-      if (isHere) { a.classList.add('here'); }
-      // 1.30.0 (Greg's R4): ONE rule for every page including the
-      // one being viewed — UPDATED while the ledger says so, from
-      // anywhere, across visits/reloads/close-and-reopen. Cleared
-      // only by acknowledgment (pills / witnessed boards), never by
-      // mere navigation.
-      if (dirty[p.href.toLowerCase()]) {
-        var b = document.createElement('span');
-        b.className = 'nbadge';
-        b.textContent = 'UPDATED';
-        a.appendChild(b);
+      if (p && p.href) { out.push({ href: p.href, label: p.label }); }
+    });
+    if (lanesPresent) { out.push({ href: 'index.html' + LANES_HASH, label: 'Lanes', lanes: true }); }
+    return out;
+  }
+  function availableSignature() {
+    return availablePages().map(function (p) { return p.href.toLowerCase(); }).join('\n');
+  }
+
+  // THE ONE ORDERING (Core_05): the menu and the arranger both draw from this. Lays a layout over the pages that
+  // exist, as described above. Returns entries: { t: 'page', href, page } or a separator { t, label }; an arranger
+  // row's key (k) rides through, so a row keeps its identity when the arranger redraws.
+  function arrangeEntries(items) {
+    var avail = availablePages();
+    var byHref = {};
+    avail.forEach(function (p) { byHref[p.href.toLowerCase()] = p; });
+    var used = {};
+    var out = [];
+    (items || []).forEach(function (it) {
+      if (it.t === 'page') {
+        var k = it.href.toLowerCase();
+        if (byHref[k] && !used[k]) { used[k] = true; out.push({ t: 'page', href: byHref[k].href, page: byHref[k], k: it.k }); }
+        return;
       }
-      nav.insertBefore(a, anchor);
+      var s = (it.t === 'head') ? { t: 'head', label: it.label } : { t: it.t };
+      s.k = it.k;
+      out.push(s);
+    });
+    avail.forEach(function (p) {
+      var k = p.href.toLowerCase();
+      if (!used[k]) { used[k] = true; out.push({ t: 'page', href: p.href, page: p }); }
+    });
+    return out;
+  }
+
+  // The name a page goes by in the menu. Nav convention (Greg, 2026-07-30): the home page is called "Home"; the
+  // manifest keeps the page's true observed title, presentation names the start point by its role.
+  function pageMenuLabel(p) {
+    return (p.href === 'index.html') ? 'Home' : (p.label || p.href);
+  }
+
+  // One page's link in the menu.
+  function pageLink(p, dirty) {
+    var a = document.createElement('a');
+    a.className = 'pages-item pages-g';
+    a.href = p.href;
+    a.textContent = pageMenuLabel(p);
+    if (p.lanes) {
+      if (lanesActive()) { a.classList.add('here'); }
+      return a;
+    }
+    var isHere = p.href.toLowerCase() === currentPageFile() && !lanesActive();
+    if (isHere) { a.classList.add('here'); }
+    // 1.30.0 (Greg's R4): ONE rule for every page including the
+    // one being viewed — UPDATED while the ledger says so, from
+    // anywhere, across visits/reloads/close-and-reopen. Cleared
+    // only by acknowledgment (pills / witnessed boards), never by
+    // mere navigation.
+    if (dirty[p.href.toLowerCase()]) {
+      var b = document.createElement('span');
+      b.className = 'nbadge';
+      b.textContent = 'UPDATED';
+      a.appendChild(b);
+    }
+    return a;
+  }
+
+  // One separator in the menu: a space, a line, or a heading over the pages below it.
+  function separatorEl(e) {
+    var d = document.createElement('div');
+    d.className = 'pages-g pages-sep pages-' + e.t;
+    if (e.t === 'head') { d.textContent = e.label; }
+    else { d.setAttribute('aria-hidden', 'true'); }
+    return d;
+  }
+
+  // The PAGES heading, with the ARRANGE button at its right.
+  function pagesCapEl() {
+    var cap = navCap('');
+    cap.classList.add('pages-cap', 'pages-g');
+    var t = document.createElement('span');
+    t.textContent = 'PAGES';
+    cap.appendChild(t);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pages-arrange' + (navEdit ? ' on' : '');
+    btn.title = navEdit ? 'Done arranging: save this order' : 'Arrange the pages: change their order, add spaces, lines and headings';
+    btn.setAttribute('aria-label', btn.title);
+    btn.setAttribute('aria-pressed', navEdit ? 'true' : 'false');
+    var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('viewBox', '0 0 16 16');
+    icon.setAttribute('fill', 'none');
+    icon.setAttribute('stroke', 'currentColor');
+    icon.setAttribute('stroke-width', '1.6');
+    icon.setAttribute('stroke-linecap', 'round');
+    icon.setAttribute('stroke-linejoin', 'round');
+    icon.innerHTML = '<path d="M5 2.5v11M2.5 5 5 2.5 7.5 5M11 13.5v-11M8.5 11 11 13.5 13.5 11"/>';
+    btn.appendChild(icon);
+    var w = document.createElement('span');
+    w.textContent = navEdit ? 'DONE' : 'ARRANGE';
+    btn.appendChild(w);
+    btn.addEventListener('click', function () {
+      if (navEdit) { arrangerDone(); } else { arrangerOpen(); }
+    });
+    cap.appendChild(btn);
+    return cap;
+  }
+
+  function renderPagesGroup(nav) {
+    // The arranger redraws itself on its own edits. Anything else (the disk watch, the UPDATED ledger, a hash change)
+    // redraws it only when the set of pages changed, so a heading being typed or a row being dragged is never torn down.
+    if (navEdit && navEdit.drawn && (navEdit.dragging || navEdit.availSig === availableSignature())) { return; }
+
+    // Remove a previous render (live rebuild replaces in place).
+    nav.querySelectorAll('.pages-g').forEach(function (el) { el.remove(); });
+    // The menu widens while the arranger is open, so each row has room for its name and its buttons.
+    nav.classList.toggle('pages-arranging', !!navEdit);
+
+    var anchor = nav.firstChild;
+    nav.insertBefore(pagesCapEl(), anchor);
+
+    if (navEdit) {
+      nav.insertBefore(arrangerEl(), anchor);
+      return;
+    }
+
+    var dirty = readDirty();
+    arrangeEntries(readLayout()).forEach(function (e) {
+      nav.insertBefore(e.t === 'page' ? pageLink(e.page, dirty) : separatorEl(e), anchor);
     });
   }
+
+  // --- The arranger ------------------------------------------------
+  function arrangerRedraw() {
+    if (!navEdit) { return; }
+    navEdit.drawn = false;
+    if (shellNavEl) { renderPagesGroup(shellNavEl); }
+  }
+  function draftEntry(e) {
+    if (!e.k) { navEditSeq += 1; }
+    var d = { k: e.k || ('r' + navEditSeq), t: e.t };
+    if (e.t === 'page') { d.href = e.href; d.page = e.page; }
+    if (e.t === 'head') { d.label = e.label; }
+    return d;
+  }
+  function arrangerOpen() {
+    navEdit = { items: arrangeEntries(readLayout()).map(draftEntry), drawn: false, dragging: null, availSig: '' };
+    arrangerRedraw();
+  }
+  function arrangerDone() {
+    if (!navEdit) { return; }
+    var items = navEdit.items;
+    navEdit = null;
+    writeLayout(items);
+    if (shellNavEl) { renderPagesGroup(shellNavEl); }
+  }
+  function arrangerCancel() {
+    if (!navEdit) { return; }
+    navEdit = null;
+    if (shellNavEl) { renderPagesGroup(shellNavEl); }
+  }
+  function arrangerReset() {
+    if (!navEdit) { return; }
+    navEdit.items = arrangeEntries(null).map(draftEntry);
+    arrangerRedraw();
+  }
+  function arrangerAdd(t) {
+    if (!navEdit) { return; }
+    var e = draftEntry(t === 'head' ? { t: 'head', label: 'Group' } : { t: t });
+    navEdit.items.push(e);
+    arrangerRedraw();
+    arrangerFocus(e.k, t === 'head' ? 'input' : '.pages-ebtn-remove');
+  }
+  function arrangerRemove(k) {
+    if (!navEdit) { return; }
+    navEdit.items = navEdit.items.filter(function (it) { return it.k !== k; });
+    arrangerRedraw();
+  }
+  function arrangerMove(k, by) {
+    if (!navEdit) { return; }
+    var i = navEdit.items.findIndex(function (it) { return it.k === k; });
+    var j = i + by;
+    if (i < 0 || j < 0 || j >= navEdit.items.length) { return; }
+    var it = navEdit.items.splice(i, 1)[0];
+    navEdit.items.splice(j, 0, it);
+    arrangerRedraw();
+    arrangerFocus(k, by < 0 ? '.pages-ebtn-up' : '.pages-ebtn-down');
+  }
+  // Puts the keyboard focus back on a row's control after a redraw, so up and down can be pressed again and again.
+  function arrangerFocus(k, selector) {
+    var row = shellNavEl && shellNavEl.querySelector('.pages-erow[data-k="' + k + '"]');
+    var el = row && row.querySelector(selector);
+    if (!el || el.disabled) { el = row && row.querySelector('.pages-ebtn:not([disabled]), input'); }
+    if (el) {
+      el.focus();
+      if (el.select) { el.select(); }
+    }
+  }
+
+  function arrangerButton(text, cls, title, onClick) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = cls;
+    b.textContent = text;
+    b.title = title;
+    b.setAttribute('aria-label', title);
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
+  // One row of the arranger: the grip to drag it by, what it is, and its buttons.
+  function arrangerRow(it, i, n) {
+    var row = document.createElement('div');
+    row.className = 'pages-erow pages-erow-' + it.t;
+    row.setAttribute('data-k', it.k);
+
+    var grip = document.createElement('span');
+    grip.className = 'pages-grip';
+    grip.title = 'Drag to move';
+    grip.innerHTML = '<svg viewBox="0 0 8 12" aria-hidden="true"><circle cx="2" cy="2" r="1"/><circle cx="6" cy="2" r="1"/><circle cx="2" cy="6" r="1"/><circle cx="6" cy="6" r="1"/><circle cx="2" cy="10" r="1"/><circle cx="6" cy="10" r="1"/></svg>';
+    arrangerDragWire(grip, row);
+    row.appendChild(grip);
+
+    var what;
+    if (it.t === 'head') {
+      what = document.createElement('input');
+      what.type = 'text';
+      what.className = 'pages-elabel';
+      what.value = it.label;
+      what.maxLength = LAYOUT_HEAD_MAX;
+      what.placeholder = 'Heading';
+      what.setAttribute('aria-label', 'Heading text');
+      what.addEventListener('input', function () { it.label = what.value; });
+      what.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter') { ev.preventDefault(); what.blur(); }
+      });
+    } else {
+      what = document.createElement('span');
+      what.className = 'pages-elabel';
+      what.textContent = it.t === 'page' ? pageMenuLabel(it.page) : (it.t === 'space' ? 'space' : 'line');
+    }
+    row.appendChild(what);
+
+    var name = it.t === 'page' ? pageMenuLabel(it.page) : it.t;
+    var up = arrangerButton('▲', 'pages-ebtn pages-ebtn-up', 'Move ' + name + ' up', function () { arrangerMove(it.k, -1); });
+    var down = arrangerButton('▼', 'pages-ebtn pages-ebtn-down', 'Move ' + name + ' down', function () { arrangerMove(it.k, 1); });
+    up.disabled = (i === 0);
+    down.disabled = (i === n - 1);
+    row.appendChild(up);
+    row.appendChild(down);
+    // Pages are never removed here: the menu lists what exists. Spaces, lines and headings are the user's to remove.
+    if (it.t !== 'page') {
+      row.appendChild(arrangerButton('×', 'pages-ebtn pages-ebtn-remove', 'Remove this ' + (it.t === 'head' ? 'heading' : it.t), function () { arrangerRemove(it.k); }));
+    }
+    return row;
+  }
+
+  function arrangerEl() {
+    // Pages may have come or gone since the draft was made: lay the draft over what exists now, keeping its keys.
+    navEdit.items = arrangeEntries(navEdit.items).map(draftEntry);
+    navEdit.availSig = availableSignature();
+    navEdit.drawn = true;
+
+    var box = document.createElement('div');
+    box.className = 'pages-g pages-arranger';
+    var list = document.createElement('div');
+    list.className = 'pages-elist';
+    var n = navEdit.items.length;
+    navEdit.items.forEach(function (it, i) { list.appendChild(arrangerRow(it, i, n)); });
+    box.appendChild(list);
+
+    var add = document.createElement('div');
+    add.className = 'pages-etools';
+    add.appendChild(arrangerButton('+ SPACE', 'pages-btn', 'Add a space at the end of the menu', function () { arrangerAdd('space'); }));
+    add.appendChild(arrangerButton('+ LINE', 'pages-btn', 'Add a line at the end of the menu', function () { arrangerAdd('line'); }));
+    add.appendChild(arrangerButton('+ HEADING', 'pages-btn', 'Add a heading at the end of the menu', function () { arrangerAdd('head'); }));
+    box.appendChild(add);
+
+    var act = document.createElement('div');
+    act.className = 'pages-etools';
+    act.appendChild(arrangerButton('DONE', 'pages-btn pages-btn-done', 'Save this order', arrangerDone));
+    act.appendChild(arrangerButton('CANCEL', 'pages-btn', 'Leave the menu as it was', arrangerCancel));
+    act.appendChild(arrangerButton('RESET', 'pages-btn', 'Back to the order the pages were added in, with no spaces, lines or headings (saved by DONE)', arrangerReset));
+    box.appendChild(act);
+
+    box.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape') { ev.preventDefault(); arrangerCancel(); }
+    });
+    return box;
+  }
+
+  // Dragging a row by its grip. Pointer events serve the mouse, a trackpad and a finger alike. The row moves past a
+  // neighbour as soon as the pointer, travelling toward it, is over it; the direction check keeps a short row and a
+  // tall row from trading places back and forth. Rows are found by hit-testing, not by measuring, so the page zoom
+  // (body zoom, 100 to 175%) never skews the arithmetic. The move and release are heard on the document, not the grip:
+  // moving the row in the page releases any pointer capture the grip held.
+  function arrangerDragWire(grip, row) {
+    grip.addEventListener('pointerdown', function (ev) {
+      if (!navEdit || navEdit.dragging || (ev.pointerType === 'mouse' && ev.button !== 0)) { return; }
+      ev.preventDefault();
+      var drag = { row: row, id: ev.pointerId, lastY: ev.clientY };
+      navEdit.dragging = drag;
+      row.classList.add('pages-dragging');
+      function move(e) {
+        if (e.pointerId !== drag.id) { return; }
+        var dy = e.clientY - drag.lastY;
+        if (!dy) { return; }
+        drag.lastY = e.clientY;
+        var hit = document.elementFromPoint(e.clientX, e.clientY);
+        var target = (hit && hit.closest) ? hit.closest('.pages-erow') : null;
+        if (!target || target === row || target.parentNode !== row.parentNode) { return; }
+        var after = !!(row.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING);
+        if (dy > 0 && after) { row.parentNode.insertBefore(row, target.nextSibling); }
+        if (dy < 0 && !after) { row.parentNode.insertBefore(row, target); }
+      }
+      function end(e) {
+        if (e.pointerId !== drag.id) { return; }
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', end);
+        document.removeEventListener('pointercancel', end);
+        row.classList.remove('pages-dragging');
+        if (!navEdit || navEdit.dragging !== drag) { return; }
+        navEdit.dragging = null;
+        var order = Array.prototype.map.call(row.parentNode.querySelectorAll('.pages-erow'), function (r) { return r.getAttribute('data-k'); });
+        var byK = {};
+        navEdit.items.forEach(function (it) { byK[it.k] = it; });
+        navEdit.items = order.map(function (k) { return byK[k]; }).filter(function (it) { return it; });
+        arrangerRedraw();
+      }
+      document.addEventListener('pointermove', move);
+      document.addEventListener('pointerup', end);
+      document.addEventListener('pointercancel', end);
+    });
+  }
+
+  // Another tab of this project saved a layout: show it here too (the storage event fires only in the other tabs).
+  window.addEventListener('storage', function (ev) {
+    if (ev.key === LAYOUT_KEY && shellNavEl && !navEdit) { renderPagesGroup(shellNavEl); }
+  });
 
   // Loads (or reloads) the site manifest, then (re)renders the PAGES
   // group. Reload uses a cache-busting query so a live delivery is
@@ -331,6 +681,212 @@
       done(false);
     };
     document.head.appendChild(s);
+  }
+
+  // ── THE LANES PAGE (2.7.0, Core_03) ── no file, no page.
+  var LANES_SRC = '_data/lanes-data.js';
+  var LANES_HASH = '#lanes';
+  var LANES_STALE_MS = 24 * 60 * 60 * 1000;
+  var LANES_ABSENT_PROBE_MS = 60000;
+  var lanesPresent = false;
+  var lastLanesSig = null;
+  var lastLanesProbe = 0;
+  var lastLanesStale = null;
+  var lanesTitleSaved = null;
+
+  function lanesData() {
+    var d = window.DASH_LANES;
+    return (d && typeof d === 'object') ? d : null;
+  }
+  function lanesSignature() {
+    try { return JSON.stringify(lanesData()); } catch (e) { return ''; }
+  }
+  function lanesActive() {
+    return lanesPresent && currentPageFile() === 'index.html' && location.hash === LANES_HASH;
+  }
+  function lanesEl(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) { e.className = cls; }
+    if (text !== undefined && text !== null) { e.textContent = String(text); }
+    return e;
+  }
+  // The seven Wire Access levels, one colour each (styles.css 1.6.0).
+  function lanesLevelClass(level) {
+    var k = String(level || '').toLowerCase().replace(/[^a-z]/g, '');
+    var map = { full: 'full', update: 'update', read: 'read', custom: 'custom', mixed: 'mixed', noaccess: 'none', none: 'none', never: 'never' };
+    return 'lv lv-' + (map[k] || 'none');
+  }
+  function lanesVerdictClass(r) {
+    var v = String((r && r.verdict) || '');
+    if (v === 'started') { return 'vd-live'; }
+    if (v === 'finished') { return (r.exit === 0) ? 'vd-ok' : 'vd-bad'; }
+    if (v === 'killed' || v === 'timed-out') { return 'vd-warn'; }
+    if (v.indexOf('dropped') === 0) { return 'vd-bad'; }
+    return '';
+  }
+  function lanesWhen(iso) {
+    var t = Date.parse(iso);
+    if (!isFinite(t)) { return '?'; }
+    try { return new Date(t).toLocaleString(); } catch (e) { return String(iso); }
+  }
+  function lanesDuration(secs) {
+    var n = Number(secs);
+    if (!isFinite(n) || n < 0) { return ''; }
+    if (n < 60) { return Math.round(n) + ' s'; }
+    if (n < 3600) { return Math.floor(n / 60) + ' m ' + Math.round(n % 60) + ' s'; }
+    return Math.floor(n / 3600) + ' h ' + Math.floor((n % 3600) / 60) + ' m';
+  }
+  function lanesIsStale(d) {
+    var t = Date.parse(d && d.at);
+    return !isFinite(t) || (Date.now() - t) > LANES_STALE_MS;
+  }
+  function lanesTable(heads) {
+    var t = lanesEl('table', 'lanes-table');
+    var tr = lanesEl('tr');
+    heads.forEach(function (h) { tr.appendChild(lanesEl('th', null, h)); });
+    var thead = lanesEl('thead'); thead.appendChild(tr); t.appendChild(thead);
+    var tb = lanesEl('tbody'); t.appendChild(tb);
+    return { table: t, body: tb };
+  }
+  function lanesRow(body, cells) {
+    var tr = lanesEl('tr');
+    cells.forEach(function (c) {
+      var td = lanesEl('td', c.cls || null);
+      if (c.node) { td.appendChild(c.node); } else { td.textContent = (c.text === undefined || c.text === null) ? '' : String(c.text); }
+      if (c.pad) { td.style.paddingLeft = c.pad; }
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  }
+
+  function renderLanes(mount) {
+    var d = lanesData();
+    mount.textContent = '';
+    if (!d) { return; }
+    var stale = lanesIsStale(d);
+    lastLanesStale = stale;
+
+    if (stale) {
+      var age = Date.parse(d.at);
+      var msg = isFinite(age)
+        ? 'STALE: this snapshot is ' + Math.floor((Date.now() - age) / 3600000) + ' hours old. The courier rewrites it at every Launch and on every rule change; what the wire may do now could differ.'
+        : 'STALE: this snapshot carries no time, so it cannot be trusted as current. The courier rewrites it at every Launch and on every rule change.';
+      mount.appendChild(lanesEl('div', 'lanes-stale', msg));
+    }
+
+    // FILES — the effective level per folder and file.
+    var files = Array.isArray(d.files) ? d.files : [];
+    mount.appendChild(lanesEl('h2', null, 'FILES'));
+    mount.appendChild(lanesEl('div', 'lanes-sub', 'Snapshot ' + lanesWhen(d.at) + (d.courier ? ' · courier ' + d.courier : '') + ' · ' + files.length + ' paths · what the file lane may do, as Wire Access shows it'));
+    var key = lanesEl('div', 'lanes-key');
+    ['Full', 'Update', 'Read', 'Custom', 'Mixed', 'No access', 'Never'].forEach(function (lv) {
+      key.appendChild(lanesEl('span', lanesLevelClass(lv), lv.toUpperCase()));
+    });
+    mount.appendChild(key);
+    var ft = lanesTable(['LEVEL', 'PATH', 'MAY', 'TYPES']);
+    files.forEach(function (f) {
+      if (!f) { return; }
+      var p = String(f.path || '');
+      var depth = (p === '' || p === '.') ? 0 : p.split('/').length - 1;
+      var name = (p === '' || p === '.') ? '(project root)' : p.split('/').pop() + (f.dir === false ? '' : '/');
+      lanesRow(ft.body, [
+        { node: lanesEl('span', lanesLevelClass(f.level), String(f.level || 'No access').toUpperCase()) },
+        { text: name, cls: 'lanes-path', pad: (8 + depth * 16) + 'px' },
+        { text: Array.isArray(f.allow) ? f.allow.join(', ') : '', cls: 'lanes-dim' },
+        { text: Array.isArray(f.types) ? f.types.join(', ') : '', cls: 'lanes-dim' }
+      ]);
+    });
+    if (!files.length) { lanesRow(ft.body, [{ text: '' }, { text: 'No paths in the snapshot.', cls: 'lanes-dim' }, { text: '' }, { text: '' }]); }
+    mount.appendChild(ft.table);
+
+    // CAN RUN — the run lane in plain words.
+    var run = (d.run && typeof d.run === 'object') ? d.run : {};
+    mount.appendChild(lanesEl('h2', null, 'CAN RUN'));
+    if (run.open === false) {
+      mount.appendChild(lanesEl('div', 'lanes-closed', 'THE RUN LANE IS CLOSED' + (run.reason ? ': ' + run.reason : '') + '. Nothing runs until the rules are fixed; every other wire kind keeps working.'));
+    }
+    var rt = lanesTable(['APPROVAL', 'RULE']);
+    (Array.isArray(run.rules) ? run.rules : []).forEach(function (r) {
+      if (!r) { return; }
+      var each = String(r.approve || '') === 'each';
+      lanesRow(rt.body, [
+        { node: lanesEl('span', 'lv ' + (each ? 'lv-custom' : 'lv-full'), each ? 'EACH' : 'NONE') },
+        { text: r.text || '' }
+      ]);
+    });
+    (Array.isArray(run.deny) ? run.deny : []).forEach(function (t) {
+      lanesRow(rt.body, [{ node: lanesEl('span', 'lv lv-never', 'DENY') }, { text: t }]);
+    });
+    (Array.isArray(run.refusals) ? run.refusals : []).forEach(function (t) {
+      lanesRow(rt.body, [{ node: lanesEl('span', 'lv lv-never', 'NEVER') }, { text: t, cls: 'lanes-dim' }]);
+    });
+    if (!rt.body.childNodes.length) { lanesRow(rt.body, [{ text: '' }, { text: 'No run rules. Nothing may run.', cls: 'lanes-dim' }]); }
+    mount.appendChild(rt.table);
+
+    // RECENT RUNS — the run ledger's last 20, newest first.
+    var runs = (Array.isArray(d.runs) ? d.runs.slice() : []).filter(Boolean);
+    runs.sort(function (a, b) { return (Date.parse(b.at) || 0) - (Date.parse(a.at) || 0); });
+    mount.appendChild(lanesEl('h2', null, 'RECENT RUNS'));
+    var xt = lanesTable(['WHEN', 'WHAT', 'VERDICT', 'EXIT', 'TOOK']);
+    runs.slice(0, 20).forEach(function (r) {
+      lanesRow(xt.body, [
+        { text: lanesWhen(r.at), cls: 'lanes-dim' },
+        { text: r.what || '' },
+        { text: r.verdict || '', cls: lanesVerdictClass(r) },
+        { text: (r.exit === undefined || r.exit === null) ? '' : r.exit },
+        { text: lanesDuration(r.secs), cls: 'lanes-dim' }
+      ]);
+    });
+    if (!runs.length) { lanesRow(xt.body, [{ text: '' }, { text: 'No runs yet.', cls: 'lanes-dim' }, { text: '' }, { text: '' }, { text: '' }]); }
+    mount.appendChild(xt.table);
+  }
+
+  // Shows or hides the Lanes view on Home. The page's own content is
+  // hidden, never removed, so leaving #lanes restores it untouched.
+  function applyLanesView() {
+    var main = document.querySelector('.frame > main');
+    if (!main) { return; }
+    var mount = document.getElementById('mai-lanes');
+    var pSpan = document.querySelector('header h1 .p');
+    if (!lanesActive()) {
+      if (mount) { mount.parentNode.removeChild(mount); }
+      Array.prototype.forEach.call(main.children, function (c) {
+        if (c.hasAttribute('data-lanes-hid')) { c.style.display = c.getAttribute('data-lanes-hid'); c.removeAttribute('data-lanes-hid'); }
+      });
+      if (pSpan && lanesTitleSaved !== null) { pSpan.textContent = lanesTitleSaved; lanesTitleSaved = null; }
+      return;
+    }
+    Array.prototype.forEach.call(main.children, function (c) {
+      if (c.id === 'mai-lanes' || c.hasAttribute('data-lanes-hid')) { return; }
+      c.setAttribute('data-lanes-hid', c.style.display || '');
+      c.style.display = 'none';
+    });
+    if (!mount) { mount = lanesEl('section'); mount.id = 'mai-lanes'; main.insertBefore(mount, main.firstChild); }
+    if (pSpan) { if (lanesTitleSaved === null) { lanesTitleSaved = pSpan.textContent; } pSpan.textContent = 'LANES'; }
+    renderLanes(mount);
+  }
+
+  // Takes the result of one read of the lanes file. Returns true when
+  // what is on disk differs from what was last drawn.
+  function adoptLanes(ok) {
+    var was = lanesPresent;
+    if (!ok) { window.DASH_LANES = undefined; }
+    lanesPresent = !!(ok && lanesData());
+    var sig = lanesPresent ? lanesSignature() : null;
+    var changed = (sig !== lastLanesSig) || (was !== lanesPresent);
+    lastLanesSig = sig;
+    if (changed) {
+      if (shellNavEl) { renderPagesGroup(shellNavEl); }
+      applyLanesView();
+    } else if (lanesActive() && lanesIsStale(lanesData()) !== lastLanesStale) {
+      applyLanesView();   // the 24-hour line crossed while the page sat open
+    }
+    return changed;
+  }
+  function loadLanes() {
+    if (!shellNavEl) { return; }        // structured legacy page — untouched
+    lastLanesProbe = Date.now();
+    reinjectData(LANES_SRC, function (ok) { adoptLanes(ok); });
   }
 
   function siteSignature() {
@@ -383,6 +939,18 @@
       });
     }
 
+    // 2.7.0: the lanes file. Every sweep while it exists; once a
+    // minute while it does not, so an absent file costs little.
+    if (shellNavEl && (lanesPresent || Date.now() - lastLanesProbe >= LANES_ABSENT_PROBE_MS)) {
+      pending += 1;
+      lastLanesProbe = Date.now();
+      reinjectData(LANES_SRC, function (ok) {
+        var hadLanes = lanesPresent;
+        if (adoptLanes(ok) && hadLanes) { changed = true; }
+        finish();
+      });
+    }
+
     if (boardsMount()) {
       pending += 1;
       reinjectData('_data/boards-data.js', function (ok) {
@@ -401,10 +969,13 @@
 
   // A wire payload means "look sooner," never "it has landed." The
   // burst covers a fast courier; the steady loop covers a slow one.
+  // 2.6.0 (audit J-15): one look now and one 1.5 s later, and a nudge while those are pending adds nothing. Every
+  // file payload used to fire three sweeps of its own, so a burst of chunks multiplied into dozens of reads.
+  var nudgeTimer = null;
   function nudgeDisk() {
+    if (nudgeTimer) return;
     pollDisk();
-    setTimeout(pollDisk, 800);
-    setTimeout(pollDisk, 2200);
+    nudgeTimer = setTimeout(function () { nudgeTimer = null; pollDisk(); }, 1500);
   }
 
   // ── STAMP STRIP HELPERS ───────────────────────────────────────
@@ -434,6 +1005,13 @@
     return (s && s.methodologyPhrase) || null;
   }
 
+  // THE TOOLS PHRASE (2.9.0). AiAssist writes it beside the
+  // methodology phrase at Launch; same trust model, same channel.
+  function toolsSeed() {
+    var s = window.DASH_STAMP;
+    return (s && s.toolsPhrase) || null;
+  }
+
   function loadStamp() {
     reinjectData('_data/stamp-data.js', function (ok) {
       if (!ok) { return; }                 // not stamped yet — cells stand
@@ -445,6 +1023,9 @@
       var seed = methodologySeed();
       var mCell = document.querySelector('.stampstrip .stampval-methodology');
       if (mCell && seed) { mCell.textContent = seed; }
+      var tools = toolsSeed();
+      var tCell = document.querySelector('.stampstrip .stampval-tools');
+      if (tCell && tools) { tCell.textContent = tools; }
     });
   }
 
@@ -677,6 +1258,11 @@
       'Compare with mAi™ METHODOLOGY FINGERPRINT in AiAssist ' +
       'Mission Control — they must match. "awaiting wire" means ' +
       'neither a Launch stamp nor a payload has reached this page yet.', true));
+
+    stamp.appendChild(stampCell('tools', toolsSeed() || 'not stamped',
+      'Fingerprint of AI_Directive_Tools.md, seeded by AiAssist at ' +
+      'Launch. Compare with the TOOLS card in AiAssist and the Tools ' +
+      'fingerprint in the code zip’s _manifest.md; they must match.', true));
 
     stamp.appendChild(stampCell('dashboard', enginePhrase() || 'not stamped',
       'Fingerprint of THIS dashboard\u2019s framework snapshot ' +
@@ -1035,12 +1621,19 @@
     } catch (e) {}
   }
 
+  // 2.6.0 (audit J-01): a payload's anchor is used only as an in-page anchor (#id). It became an href unchecked,
+  // so a "javascript:" value ran on click and persisted in localStorage to run again on the next visit.
+  function safeAnchor(v) {
+    return (typeof v === 'string' && /^#[A-Za-z][\w\-:.]*$/.test(v)) ? v : '';
+  }
+
   function renderNow(p) {
     const strip = document.getElementById('wire-now');
     if (!strip) return;
     strip.querySelector('.wn-note').textContent = p.note || '';
     const a = strip.querySelector('.wn-anchor');
-    if (p.anchor) { a.textContent = p.anchor; a.href = p.anchor; a.style.display = ''; }
+    const anchor = safeAnchor(p.anchor);
+    if (anchor) { a.textContent = anchor; a.href = anchor; a.style.display = ''; }
     else { a.style.display = 'none'; }
     strip.querySelector('.wn-at').textContent = p.at || '';
     strip.classList.add('live');
@@ -1102,6 +1695,14 @@
     });
   }
 
+  // 2.6.0 (audit J-12): a board id is escaped before it goes into a selector. A quote in an id made the selector
+  // throw, and the throw emptied the whole board area.
+  function boardSelector(id) {
+    var s = String(id);
+    var esc = (window.CSS && typeof CSS.escape === 'function') ? CSS.escape(s) : s.replace(/["\\]/g, '\\$&');
+    return '[data-board-id="' + esc + '"]';
+  }
+
   function renderBoard(board, flash, changedKeys) {
     var mount = boardsMount();
     if (!mount || !board || !board.id) return;
@@ -1149,7 +1750,7 @@
       card.appendChild(r);
     });
 
-    var existing = mount.querySelector('[data-board-id="' + board.id + '"]');
+    var existing = mount.querySelector(boardSelector(board.id));
     if (existing) { mount.replaceChild(card, existing); }
     else { mount.appendChild(card); }
   }
@@ -1201,7 +1802,7 @@
   // celebration out.
   function celebrateAndRetire(id) {
     var mount = boardsMount();
-    var card = mount ? mount.querySelector('[data-board-id="' + id + '"]') : null;
+    var card = mount ? mount.querySelector(boardSelector(id)) : null;
     if (!card) { renderAllBoards(boardState); return; }
     card.style.position = 'relative';
     card.style.overflow = 'hidden';
@@ -1270,9 +1871,16 @@
     var id = p.transferId;
     if (!id || !p.total || !p.index || !p.sha256 || typeof p.content !== 'string') return;
 
+    // 2.6.0 (audit J-15): a transfer that has not completed within two minutes is dropped, so lost chunks do not
+    // hold their pieces for the life of the page
+    var nowMs = Date.now();
+    Object.keys(chunkTransfers).forEach(function (k) {
+      if (nowMs - (chunkTransfers[k].started || nowMs) > 120000) { delete chunkTransfers[k]; }
+    });
+
     var t = chunkTransfers[id];
     if (!t) {
-      t = { total: p.total, sha: p.sha256, pieces: {} };
+      t = { total: p.total, sha: p.sha256, pieces: {}, started: nowMs };
       chunkTransfers[id] = t;
     } else if (t.total !== p.total || t.sha !== p.sha256) {
       // Disagreement — drop the whole transfer (tamper/corruption).
@@ -1342,8 +1950,9 @@
               showCourierWarning();
             }
           } catch (e) {}
+          dropProbe(probe);
         };
-        probe.onerror = function () { showCourierWarning(); }; // no durable file at all
+        probe.onerror = function () { dropProbe(probe); showCourierWarning(); }; // no durable file at all
         document.head.appendChild(probe);
       } catch (e) {}
     }, 8000);
@@ -1386,11 +1995,18 @@
               setTimeout(function () { dismissCourierWarning(warn); }, 4000);
             }
           } catch (e) {}
+          dropProbe(probe);
         };
-        probe.onerror = function () {};
+        probe.onerror = function () { dropProbe(probe); };
         document.head.appendChild(probe);
       } catch (e) {}
     }, 6000);
+  }
+
+  // 2.6.0 (audit J-10): a probe script leaves the page once it has loaded or failed. While COURIER SILENT showed,
+  // one new <script> stayed in <head> every 6 seconds, for as long as the warning stood.
+  function dropProbe(s) {
+    if (s && s.parentNode) s.parentNode.removeChild(s);
   }
 
   function dismissCourierWarning(warn) {
@@ -1422,7 +2038,10 @@
     // since courier 2.2.0, a rename since 2.17.0). Left off this list
     // they toasted as refusals, which is the false alarm the list exists
     // to prevent.
-    var success = verdict.indexOf('verified') === 0 || verdict === 'executed' || verdict === 'deleted' || verdict === 'renamed';
+    // 2.7.1 (Greg, the run lane's acceptance): a run lane receipt is not a delivery. Its sender reads every verdict
+    // in its own reply, so the DELIVERY REFUSED notice never speaks for one; it showed a run's "started" as refused.
+    if (isRunLaneReceipt(p)) return;
+    var success = receiptSucceeded(verdict);
     if (!success) {
       // The courier ANSWERED. A pending silence check would layer
       // the off/disarmed story on top of a courier that is running
@@ -1437,6 +2056,10 @@
         }
       }
       showCourierRefusal(String(p.detail || verdict), verdict);
+      // 2.6.0 (audit J-03): a board is painted and cached the moment the page hears it, before the courier rules.
+      // When the courier refuses a board, repaint from disk, so the refused board does not stay on screen (and in
+      // the cache) until disk next changes.
+      if (String(p.ofKind || '').toLowerCase() === 'board') { reloadDurableBoards(); }
       return;
     }
     // A success while the refusal shows means auth is whole again —
@@ -1448,6 +2071,20 @@
       if (t.btn.parentNode) t.btn.parentNode.removeChild(t.btn);
       setTimeout(function () { dismissCourierWarning(t.el); }, 4000);
     }
+  }
+
+  // 2.7.1: the ONE success list, read by the refusal notice and the wire strip alike, so the two cannot disagree.
+  // started, finished, killed and timed-out are the courier doing what a run asked (courier 2.25.0); a run that
+  // ends non-zero, is stopped, or runs out of time still went where it was sent.
+  function receiptSucceeded(verdict) {
+    var v = String(verdict || '').toLowerCase();
+    if (v.indexOf('verified') === 0) return true;
+    return ['executed', 'deleted', 'renamed', 'started', 'finished', 'killed', 'timed-out'].indexOf(v) !== -1;
+  }
+
+  // 2.7.1: receipts of the run lane (run, kill, runs, lanes), told apart by the kind they answer.
+  function isRunLaneReceipt(p) {
+    return ['run', 'kill', 'runs', 'lanes'].indexOf(String(p.ofKind || '').toLowerCase()) !== -1;
   }
 
   // 2.5.3 (Greg, the file lane's first test run): the advice follows
@@ -1484,8 +2121,8 @@
     try {
       var s = document.createElement('script');
       s.src = '_data/boards-data.js?b=' + Date.now();
-      s.onload = adoptDurableBoards;
-      s.onerror = function () {};
+      s.onload = function () { dropProbe(s); adoptDurableBoards(); };
+      s.onerror = function () { dropProbe(s); };
       document.head.appendChild(s);
     } catch (e) {}
   }
@@ -1558,7 +2195,7 @@
         if (Object.keys(glowIds).length) { markHereUpdated(); } // nav names this page (1.25.0)
         else { witnessBoards(); }        // 1.30.1: adopted with no news while watching = seen
         Object.keys(glowIds).forEach(function (id) {
-          var card = document.querySelector('[data-board-id="' + id + '"]');
+          var card = document.querySelector(boardSelector(id));
           if (!card) return;
           card.classList.add('wb-live-glow');
           var keys = rowKeys[id] || {};
@@ -1627,7 +2264,9 @@
     var k = String(p.kind || '');
     if (k === 'receipt') {
       var v = String(p.verdict || '').toLowerCase();
-      return (v.indexOf('verified') === 0 || v === 'executed' || v === 'deleted') ? 'ok' : 'refused';
+      // 2.6.0 (audit J-08): renamed is a success too; it drew as a refusal on the strip
+      // 2.7.1: the strip reads the same success list as the refusal notice
+      return receiptSucceeded(v) ? 'ok' : 'refused';
     }
     if (k === 'board' || k === 'file' || k === 'command') return 'delivery';
     return 'other';
@@ -1645,16 +2284,25 @@
   }
   function seedWireLog() {
     // One poll of the relay's cache, parsed as JSON, never pattern-matched.
+    // 2.6.0 (audit J-11): the seed is one batch: the log is read once, every new message is added with a set
+    // lookup, and the log is written and drawn once. It went through wireLogNote per message, re-reading,
+    // rewriting and redrawing the whole log each time, which made the seed quadratic.
     fetch('https://ntfy.sh/' + WIRE_TOPIC + '/json?poll=1&since=24h').then(function (r) { return r.text(); }).then(function (txt) {
+      var floor = Math.floor(Date.now() / 1000) - WIRE_LOG_MAX_AGE;
+      var log = wireLogRead().filter(function (e) { return e.t >= floor; });
+      var seen = {};
+      log.forEach(function (e) { seen[e.id] = true; });
       txt.split('\n').forEach(function (line) {
         if (!line.trim()) return;
         var d, p;
         try { d = JSON.parse(line); p = JSON.parse(d.message); } catch (e) { return; }
         if (!d || d.event !== 'message' || !p || !p.project) return;
         if (String(p.project).toLowerCase() !== String(PROJECT).toLowerCase()) return;
-        p.__envId = d.id; p.__envTime = d.time || 0;
-        wireLogNote(p);
+        if (!d.id || seen[d.id]) return;
+        seen[d.id] = true;
+        log.push({ id: d.id, t: Number(d.time) || Math.floor(Date.now() / 1000), c: wireLogClass(p) });
       });
+      try { localStorage.setItem(wireLogKey(), JSON.stringify(log)); } catch (e) {}
       renderWireStrip();
     }).catch(function () {});
   }
@@ -1805,7 +2453,12 @@
     // what asks. Chunk pieces before the last describe a file that
     // does not exist yet, so they are ignored outright.
     if (p.kind === 'file') {
-      var fname = (p.filename || '').toLowerCase();
+      // 2.6.0 (audit J-09): a delivery in the project-path form (path "_docs/_dashboard/x.html", the file lane
+      // since courier 2.17.0) names its page by path, not filename; it is read in the dashboard form so the
+      // page it delivers reloads like one sent by filename.
+      var dashPrefix = '_docs/_dashboard/';
+      var pathForm = String(p.path || '').replace(/^\.?\//, '');
+      var fname = (p.filename || (pathForm.toLowerCase().indexOf(dashPrefix) === 0 ? pathForm.slice(dashPrefix.length) : '')).toLowerCase();
       var mine = fname === currentPageFile();
       var finalPiece = !p.transferId || (p.index === p.total);
 
@@ -1892,9 +2545,11 @@
     renderNow(p);
     var strip = document.getElementById('wire-now');
     if (strip) { clearLiveGlow(); strip.classList.add('wb-live-glow'); }
-    try { localStorage.setItem('mai-wire-last--' + PROJECT, JSON.stringify(p)); } catch (e) {}
-    if (p.anchor) {
-      const el = document.querySelector(p.anchor);
+    // 2.6.0 (audit J-01): only the checked anchor is kept and followed
+    const anchorOk = safeAnchor(p.anchor);
+    try { localStorage.setItem('mai-wire-last--' + PROJECT, JSON.stringify({ note: p.note, anchor: anchorOk, at: p.at })); } catch (e) {}
+    if (anchorOk) {
+      const el = document.querySelector(anchorOk);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
     chime();
@@ -1943,6 +2598,24 @@
     try { localStorage.setItem(wireSinceKey(), String(id)); } catch (e) {}
   }
 
+  // LIVENESS WATCHDOG (2.6.0, audit J-14): a half-open connection never fires onerror, so the page stayed deaf
+  // with no WIRE OFFLINE. The relay sends a keepalive about every 45 s; when nothing at all has been heard for
+  // 150 s, the connection is treated as dead and the normal reconnect takes over.
+  var wireHeardMs = 0;
+  var wireWatchdog = null;
+  function startWireWatchdog() {
+    if (wireWatchdog) return;
+    wireWatchdog = setInterval(function () {
+      if (!wireES || !wireHeardMs) return;
+      if (Date.now() - wireHeardMs > 150000) {
+        try { wireES.close(); } catch (e) {}
+        wireES = null;
+        wireHeardMs = 0;
+        scheduleWireReconnect();
+      }
+    }, 30000);
+  }
+
   function openWire() {
     if (wireTimer) { clearTimeout(wireTimer); wireTimer = null; }
     if (wireES) { try { wireES.close(); } catch (e) {} wireES = null; }
@@ -1957,14 +2630,22 @@
     try {
       var es = new EventSource(url);
       wireES = es;
+      wireHeardMs = Date.now();
+      startWireWatchdog();
 
       es.onopen = function () {
         wireRetry = 0;
         wireEverOpen = true;
+        wireHeardMs = Date.now();
         dismissWireOffline();
       };
 
+      // The relay's keepalive and open events count as hearing it (2.6.0, audit J-14)
+      es.addEventListener('keepalive', function () { wireHeardMs = Date.now(); });
+      es.addEventListener('open', function () { wireHeardMs = Date.now(); });
+
       es.onmessage = function (ev) {
+        wireHeardMs = Date.now();
         try {
           var d = JSON.parse(ev.data);
           if (d.event && d.event !== 'message') return;
@@ -2054,10 +2735,14 @@
   // count: the dwell timer only runs while the document is visible.
   var ACK_DWELL_MS = 6000;
   var ackDwellTimer = null;
+  var ackVisibilityListener = null;   // 2.6.0 (audit J-13): kept so it can be removed
   function removeAckAll() {
     var el = document.querySelector('.mai-ack-all');
     if (el && el.parentNode) { el.parentNode.removeChild(el); }
     if (ackDwellTimer) { clearTimeout(ackDwellTimer); ackDwellTimer = null; }
+    // 2.6.0 (audit J-13): the visibility listener leaves with the control; it stayed for the life of the page and
+    // re-armed the dwell timer on every tab switch after everything was already acknowledged
+    if (ackVisibilityListener) { document.removeEventListener('visibilitychange', ackVisibilityListener); ackVisibilityListener = null; }
   }
   function installAckAll(pendingAcks, count) {
     var host = document.getElementById('authored') || document.body;
@@ -2078,6 +2763,8 @@
       if (document.hidden) { return; }
       ackDwellTimer = setTimeout(function () { ackDwellTimer = null; ackAll(); }, ACK_DWELL_MS);
     }
+    if (ackVisibilityListener) { document.removeEventListener('visibilitychange', ackVisibilityListener); }
+    ackVisibilityListener = armDwell;
     document.addEventListener('visibilitychange', armDwell);
     armDwell();
   }
@@ -2167,6 +2854,9 @@
   // --- Init --------------------------------------------------------
   buildShell();
   loadSite(false);
+  loadLanes();
+  // 2.7.0: #lanes opens and closes the Lanes view without a reload.
+  window.addEventListener('hashchange', function () { if (shellNavEl) { renderPagesGroup(shellNavEl); } applyLanesView(); });
   renderChips();
   applyZoom(readSaved());
   buildStrip();

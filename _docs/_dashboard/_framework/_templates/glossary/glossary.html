@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!-- ===============================================================
+@file: glossary.html
+@filepath: dashboard_engine/_framework/_templates/glossary/glossary.html
+@version: 1.0.0
+@updated: 2026-11-13 05:16:26 PM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Glossary page type's starting page, founded as glossary.html at a project's dashboard root (tokens
+  swapped, founding refused if any token survives). A FOUNDED file: it belongs to the project from birth and is never
+  overwritten; it carries only identity (the DASH_* variables and the mai-* meta tags) and the Glossary's frame. The
+  terms live in glossary/glossary.json (Lexicon Codex curriculum shape, this type's GLOSSARY-SCHEMA.md), built into
+  glossary/glossary-data.js by the type's glossary-export.js; _framework/_templates/glossary/glossary.js draws them and
+  glossary-ask.js adds Ask on every card (served page only), through the Ask part in _framework/_parts/ask/.
+  Previewed at the engine home, the unswapped tokens rendering as literal text are the tell that this is the template.
+@tags: template, page-type, glossary, lexicon, topics, ask, thin-shell, living-dashboard
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-13  Greg & Claude  1.0.0          The Glossary page type's starting page, harvested from Project-AI-Local glossary.html 2.4.1: its styles moved to glossary.css, its scripts to the stamped type and the Ask part, page-type identity meta tags, NEW the topic filter row
+=============================================================== -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mai-project" content="{{PROJECT_KEY}}">
+<meta name="mai-founded" content="{{FOUNDED_AT}}">
+<meta name="mai-page-type" content="glossary">
+<meta name="mai-page-template-version" content="1.0.0">
+<title>Glossary</title>
+<link rel="stylesheet" href="_framework/styles.css">
+<link rel="stylesheet" href="_framework/_templates/glossary/glossary.css">
+</head>
+<body>
+
+<script>
+  /* Identity: the only configuration a page carries. */
+  window.DASH_PROJECT = '{{PROJECT_KEY}}';
+  window.DASH_NAME    = '{{PROJECT_NAME}}';
+  window.DASH_PAGE    = 'GLOSSARY';
+  window.DASH_HOME    = 'index.html';
+  window.DASH_FOUNDED = '{{FOUNDED_AT}}';
+</script>
+
+<div id="authored">
+
+<section id="glossary">
+  <div class="gl-top">
+    <h2>GLOSSARY <span class="tag" id="gl-count">loading</span></h2>
+    <div class="gl-bar">
+      <div id="gl-view" class="gl-view" role="group" aria-label="View" hidden><button type="button" data-v="cards">Cards</button><button type="button" data-v="index">Index</button></div>
+      <input id="gl-search" class="gl-search" type="search" placeholder="search terms and meanings" autocomplete="off" aria-label="Search terms and meanings">
+      <button type="button" id="gl-reviewonly" class="gl-dom gl-revbtn" hidden></button>
+      <div id="gl-domains" class="gl-domains"></div>
+    </div>
+    <div id="gl-topics" class="gl-topics" role="group" aria-label="Topics" hidden></div>
+  </div>
+  <div id="gl-list" class="gl-list"></div>
+  <div id="gl-index" class="gl-index" hidden></div>
+</section>
+
+</div>
+
+<script src="glossary/glossary-data.js"></script>
+<script src="_framework/dashboard.js"></script>
+<script src="_framework/_parts/ask/ask-link.js"></script>
+<script src="_framework/_parts/ask/ask-prompt.js"></script>
+<script src="_framework/_templates/glossary/glossary-ask.js"></script>
+<script src="_framework/_templates/glossary/glossary.js"></script>
+</body>
+</html>

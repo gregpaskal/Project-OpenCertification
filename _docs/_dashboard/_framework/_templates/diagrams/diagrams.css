@@ -1,0 +1,48 @@
+/* ===============================================================
+@file: diagrams.css
+@filepath: dashboard_engine/_framework/_templates/diagrams/diagrams.css
+@version: 1.0.1
+@updated: 2026-11-12 08:09:17 PM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Diagrams page type's stylesheet, the master AiAssist publishes into a project's
+  _docs/_dashboard/_framework/_templates/diagrams/diagrams.css (a STAMPED file: never edited in a project). The one stylesheet this
+  page type adds to the base (README gate 3: one base stylesheet plus one per page type as needed); it holds only the
+  dg- selectors this type uses and only the base's tokens from _framework/styles.css. Harvested from Project-AI-Local
+  diagrams.css 1.1.0 (2026-10-31): the business-card catalog and the full-window infinite-canvas viewer.
+@tags: dashboard, page-type, diagram, catalog, viewer, infinite-canvas, template
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-12  Greg & Claude  1.0.0          The Diagrams page type's stylesheet, harvested from Project-AI-Local diagrams.css 1.1.0; rules unchanged
+2026-11-12  Greg & Claude  1.0.1          Moved with the engine: the page types now live in dashboard_engine/_framework/_templates/, so AiAssist copies them with the engine (framework entry "- _framework/"); @filepath follows, template 1.0.1
+=============================================================== */
+
+/* ── CATALOG ───────────────────────────────────────────── */
+.dg-intro{color:var(--faint-text); font-size:11px; line-height:1.7; margin:0 0 18px; max-width:760px;}
+.dg-grid{display:grid; grid-template-columns:1fr; gap:18px;}
+.dg-card{background:var(--panel); border:1px solid var(--hair); border-radius:12px; overflow:hidden; display:flex; flex-direction:row; align-items:stretch; scroll-margin-top:16px;}
+.dg-card:target{border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan);}
+.dg-thumb{display:block; flex:0 0 380px; width:380px; aspect-ratio:7 / 4; align-self:flex-start; background:var(--bg); border:none; border-right:1px solid var(--hair); padding:10px; cursor:zoom-in;}
+.dg-thumb img{width:100%; height:100%; object-fit:contain; display:block;}
+.dg-thumb:hover, .dg-thumb:focus-visible{outline:none; background:#0E131D;}
+.dg-body{padding:14px 18px 16px; display:flex; flex-direction:column; gap:8px; flex:1 1 auto; min-width:0;}
+.dg-body h3{font-size:11px; letter-spacing:2px; color:var(--cyan); font-weight:600;}
+.dg-summary{font-size:11px; line-height:1.6; color:var(--ink);}
+.dg-meta{font-size:10px; letter-spacing:1px; color:var(--faint-text);}
+.dg-actions{display:flex; gap:10px; margin-top:auto; padding-top:4px;}
+.dg-btn{font:inherit; font-size:10px; letter-spacing:1px; color:var(--cyan); background:transparent; border:1px solid var(--hair); border-radius:6px; padding:5px 10px; cursor:pointer; text-decoration:none;}
+.dg-btn:hover, .dg-btn:focus-visible{border-color:var(--cyan); text-decoration:none; outline:none;}
+.dg-keys{font-size:11px; line-height:1.9; color:var(--ink);}
+.dg-keys b{color:var(--gap); font-weight:500;}
+@media (max-width:760px){ .dg-card{flex-direction:column;} .dg-thumb{flex:0 0 auto; width:100%; border-right:none; border-bottom:1px solid var(--hair);} }
+
+/* ── VIEWER (full window, infinite canvas) ─────────────── */
+.dg-viewer{position:fixed; inset:0; z-index:9000; background:var(--bg); color:var(--ink); display:flex; flex-direction:column; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px;}
+.dg-bar{display:flex; align-items:center; gap:10px; padding:10px 16px; border-bottom:1px solid var(--hair); background:var(--panel); flex:0 0 auto;}
+.dg-bar .dg-title{font-size:11px; letter-spacing:2px; color:var(--mod); margin-right:auto; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.dg-bar .dg-zoom{min-width:58px; text-align:center; font-size:11px; color:var(--done);}
+.dg-bar .dg-hint{font-size:10px; color:var(--faint-text); margin-left:8px;}
+.dg-stage{position:relative; flex:1 1 auto; overflow:hidden; cursor:grab; touch-action:none; background-color:var(--bg); background-image:linear-gradient(rgba(35,43,61,.55) 1px, transparent 1px), linear-gradient(90deg, rgba(35,43,61,.55) 1px, transparent 1px);}
+.dg-stage.dg-dragging{cursor:grabbing;}
+.dg-stage img{position:absolute; left:0; top:0; max-width:none; user-select:none; -webkit-user-drag:none; pointer-events:none;}

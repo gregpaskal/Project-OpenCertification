@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- ===============================================================
+@file: user-guide.html
+@filepath: dashboard_engine/_framework/_templates/user-guide/user-guide.html
+@version: 2.0.0
+@updated: 2026-11-13 04:51:30 PM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The User Guide page type's starting page, founded as user-guide.html at a project's dashboard root (tokens swapped,
+  founding refused if any token survives). A FOUNDED file: it belongs to the project from birth and is never
+  overwritten; it carries only identity (the DASH_* variables and the mai-* meta tags) and the User Guide's frame. What the
+  project can do, and how to start each thing, built from _docs/_capabilities/CAPABILITIES.md into user-guide/user-guide-data.js
+  by the type's user-guide-export.js; _framework/_templates/user-guide/user-guide.js draws it. Ask the User Guide (served page only) answers
+  how-to questions from the same data with a model on this Mac, through the Ask part in _framework/_parts/ask/.
+  Previewed at the engine home, the unswapped tokens rendering as literal text are the tell that this is the template.
+@tags: template, page-type, guide, capabilities, help, ask, thin-shell, living-dashboard
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-13  Greg & Claude  1.0.0          The Guide page type's starting page, harvested from Project-AI-Local guide.html 1.0.1: its styles moved to guide.css, its scripts to the stamped type and the Ask part, page-type identity meta tags, a placeholder question that fits any project
+2026-11-13  Greg & Claude  1.1.0          The User Guide (Greg): the menu, the header and the Ask box say User Guide, and the Ask box offers questions about the project as well as how-to
+2026-11-13  Greg & Claude  2.0.0          Renamed from the guide type to user-guide (Greg: get everything changed over to user guide): the type key, folder, file names, page file user-guide.html, data folder user-guide/, globals DASH_USER_GUIDE and UG_TEMPLATE_VERSION, the ug- class prefix, storage keys and the update the user guide trigger
+=============================================================== -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mai-project" content="{{PROJECT_KEY}}">
+<meta name="mai-founded" content="{{FOUNDED_AT}}">
+<meta name="mai-page-type" content="user-guide">
+<meta name="mai-page-template-version" content="2.0.0">
+<title>User Guide</title>
+<link rel="stylesheet" href="_framework/styles.css">
+<link rel="stylesheet" href="_framework/_templates/user-guide/user-guide.css">
+</head>
+<body>
+
+<script>
+  /* Identity: the only configuration a page carries. */
+  window.DASH_PROJECT = '{{PROJECT_KEY}}';
+  window.DASH_NAME    = '{{PROJECT_NAME}}';
+  window.DASH_PAGE    = 'USER GUIDE';
+  window.DASH_HOME    = 'index.html';
+  window.DASH_FOUNDED = '{{FOUNDED_AT}}';
+</script>
+
+<div id="authored">
+
+<section id="user-guide">
+  <div class="ug-top">
+    <h2>USER GUIDE <span class="tag" id="ug-count">loading</span></h2>
+    <div class="ug-bar">
+      <input id="ug-search" class="ug-search" type="search" placeholder="find a capability (press /)" autocomplete="off" aria-label="Find a capability">
+      <div id="ug-pills" class="ug-pills" role="group" aria-label="Groups"></div>
+    </div>
+  </div>
+
+  <div class="ug-hero">
+    <div class="ug-askbox">
+      <div class="ug-askhead"><h3>ASK THE USER GUIDE</h3><select id="ug-ask-model" aria-label="Model" title="The model that answers; remembered in this browser" hidden></select></div>
+      <p class="ug-sub">Ask how to use something here, or ask about the project, in plain words. A model on this Mac answers from this User Guide and names the capability it used; click a name to open it.</p>
+      <form id="ug-ask" class="ug-ask" autocomplete="off">
+        <input id="ug-ask-q" type="text" placeholder="how do I start something here?" aria-label="Ask the User Guide" disabled>
+        <button type="submit" id="ug-ask-go" class="ug-btn" disabled>Ask</button>
+        <button type="button" id="ug-ask-stop" class="ug-btn stop" hidden>Stop</button>
+      </form>
+      <div id="ug-ask-status" class="ug-ask-status" hidden></div>
+      <div id="ug-starters" class="ug-starters"></div>
+      <div id="ug-answers" class="ug-answers" aria-live="polite"></div>
+      <div class="ug-askfoot"><button type="button" id="ug-ask-clear" class="ug-link" hidden>Clear answers</button></div>
+    </div>
+    <div id="ug-new" class="ug-new"></div>
+  </div>
+
+  <div id="ug-groups"></div>
+  <div id="ug-none" class="ug-none" hidden></div>
+
+  <div class="ug-foot">
+    <details><summary>Rules for using these</summary><ul id="ug-rules"></ul></details>
+    <details><summary>Open threads (not finished yet)</summary><ul id="ug-threads"></ul></details>
+  </div>
+  <div class="ug-asof" id="ug-asof"></div>
+</section>
+
+</div>
+
+<script src="user-guide/user-guide-data.js"></script>
+<script src="_framework/dashboard.js"></script>
+<script src="_framework/_parts/ask/ask-link.js"></script>
+<script src="_framework/_parts/ask/ask-prompt.js"></script>
+<script src="_framework/_templates/user-guide/user-guide.js"></script>
+</body>
+</html>

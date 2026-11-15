@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- ===============================================================
+@file: instruments.html
+@filepath: dashboard_engine/_framework/_templates/instruments/instruments.html
+@version: 1.0.0
+@updated: 2026-11-13 05:16:26 PM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Instruments page type's starting page, founded as instruments.html at a project's dashboard root
+  (tokens swapped, founding refused if any token survives). A FOUNDED file: it belongs to the project from birth and is
+  never overwritten; it carries only identity (the DASH_* variables and the mai-* meta tags) and the frame. Anatomy:
+  Status Strip, Gauge Row of Gauges each with a Sparkline for the current run, Runs Table of finished runs, legend.
+  What is measured, and the instrument lane it is read from, live in instruments/instruments-config.js;
+  _framework/_templates/instruments/instruments.js draws it. Read-only: it sends nothing.
+  Previewed at the engine home, the unswapped tokens rendering as literal text are the tell that this is the template.
+@tags: template, page-type, instruments, instrument-lane, gauges, thin-shell, living-dashboard
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-13  Greg & Claude  1.0.0          The Instruments page type's starting page, harvested from Project-AI-Local instruments.html 1.3.1: its styles moved to instruments.css, its script to the stamped type, its settings to instruments-config.js, page-type identity meta tags
+=============================================================== -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mai-project" content="{{PROJECT_KEY}}">
+<meta name="mai-founded" content="{{FOUNDED_AT}}">
+<meta name="mai-page-type" content="instruments">
+<meta name="mai-page-template-version" content="1.0.0">
+<title>Instruments</title>
+<link rel="stylesheet" href="_framework/styles.css">
+<link rel="stylesheet" href="_framework/_templates/instruments/instruments.css">
+</head>
+<body>
+
+<script>
+  /* Identity: the only configuration a page carries. */
+  window.DASH_PROJECT = '{{PROJECT_KEY}}';
+  window.DASH_NAME    = '{{PROJECT_NAME}}';
+  window.DASH_PAGE    = 'INSTRUMENTS';
+  window.DASH_HOME    = 'index.html';
+  window.DASH_FOUNDED = '{{FOUNDED_AT}}';
+</script>
+
+<div id="authored">
+
+<section id="instruments">
+  <h2>INSTRUMENTS <span class="tag" id="in-sub"></span></h2>
+  <div class="in-strip" id="in-strip"><span class="in-pill">WAITING</span> <span>reading the wire</span></div>
+  <div class="in-row" id="in-row"></div>
+  <div class="in-runs" id="in-runs"></div>
+  <div class="in-legend" id="in-legend"></div>
+</section>
+
+</div>
+
+<script src="instruments/instruments-config.js"></script>
+<script src="_framework/dashboard.js"></script>
+<script src="_framework/_templates/instruments/instruments.js"></script>
+</body>
+</html>

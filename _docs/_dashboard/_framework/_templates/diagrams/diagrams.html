@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- ===============================================================
+@file: diagrams.html
+@filepath: dashboard_engine/_framework/_templates/diagrams/diagrams.html
+@version: 1.0.1
+@updated: 2026-11-12 08:09:17 PM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Diagrams page type's starting page: the page a project carries at its dashboard root, founded by AiAssist from
+  this template (tokens swapped, founding refused if any token survives). A FOUNDED file: it belongs to the project
+  from birth and is never overwritten; it carries only identity (the DASH_* variables and the mai-* meta tags) and
+  its authored sections. The stamped engine builds the shell; _framework/_templates/diagrams/diagrams.js draws the cards from
+  diagrams/diagrams-data.js and opens the viewer. Previewed at the engine home, the unswapped tokens rendering as
+  literal text are the tell that this is the template.
+@tags: template, page-type, diagram, thin-shell, living-dashboard
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-12  Greg & Claude  1.0.0          The Diagrams page type's starting page, harvested from Project-AI-Local diagrams.html 1.0.1: cards from data, page-type identity meta tags
+2026-11-12  Greg & Claude  1.0.1          Moved with the engine: the page types now live in dashboard_engine/_framework/_templates/, so AiAssist copies them with the engine (framework entry "- _framework/"); @filepath follows, template 1.0.1; mai-page-type reads diagrams, the type's name (it read diagram), and mai-page-template-version reads 1.0.1
+=============================================================== -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mai-project" content="{{PROJECT_KEY}}">
+<meta name="mai-founded" content="{{FOUNDED_AT}}">
+<meta name="mai-page-type" content="diagrams">
+<meta name="mai-page-template-version" content="1.0.1">
+<title>Diagrams</title>
+<link rel="stylesheet" href="_framework/styles.css">
+<link rel="stylesheet" href="_framework/_templates/diagrams/diagrams.css">
+</head>
+<body>
+
+<script>
+  /* Identity: the only configuration a page carries. */
+  window.DASH_PROJECT = '{{PROJECT_KEY}}';
+  window.DASH_NAME    = '{{PROJECT_NAME}}';
+  window.DASH_PAGE    = 'DIAGRAMS';
+  window.DASH_HOME    = 'index.html';
+  window.DASH_FOUNDED = '{{FOUNDED_AT}}';
+</script>
+
+<div id="authored">
+
+<section id="catalog">
+  <h2>DIAGRAMS <span class="tag" id="dg-count">the project's visual library</span></h2>
+  <p class="dg-intro">Every diagram this project makes lives here. Click a card to open it full window on an infinite canvas: pan anywhere, zoom as far as you need, and the text stays sharp. To add a diagram, file its SVG in diagrams/svg/ and add one entry to diagrams/diagrams-data.js; the page does the rest.</p>
+  <div class="dg-grid" id="dg-grid"></div>
+</section>
+
+<section id="viewer-keys">
+  <h2>VIEWER KEYS <span class="tag">inside a full-size diagram</span></h2>
+  <div class="dg-keys">
+    <b>Pan</b> drag, two-finger scroll, or arrow keys<br>
+    <b>Zoom</b> pinch, ⌘ + scroll, double-click (Shift + double-click zooms out), or + and -<br>
+    <b>Fit</b> 0 or the FIT button · <b>Actual size</b> 1 or the 1:1 button · <b>Close</b> Esc
+  </div>
+</section>
+
+</div>
+
+<script src="_framework/dashboard.js"></script>
+<script src="diagrams/diagrams-data.js"></script>
+<script src="_framework/_templates/diagrams/diagrams.js"></script>
+</body>
+</html>

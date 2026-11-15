@@ -1,0 +1,130 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/instruments/template.yaml
+# @version: 1.0.0
+# @updated: 2026-11-13 05:16:26 PM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The Instruments page type, in the form AiAssist and a chat read: its identity, the questions asked
+#   before it is founded, how it is stamped into every project, what founding copies and where, the settings file's
+#   schema, and the messages it reads from the instrument lane. Read with a real YAML parser, never by string matching
+#   (Core_10 rule 6).
+# @tags: template, page-type, instruments, instrument-lane, gauges, schema
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-13  Greg & Claude  1.0.0          The Instruments page type: one per project, two founding questions, stamped folder, two founded files, settings schema 1.0.0 and the lane message it reads
+# ===============================================================
+type: instruments
+title: Instruments
+need: optional
+templateVersion: 1.0.0
+description: A run being measured, live from an instrument lane - a Status Strip, a row of gauges with sparklines, a table of finished runs - with a learning card on every gauge and column that can be pinned, dragged and resized.
+harvestedFrom: Project-AI-Local, _docs/_dashboard/instruments.html 1.3.1, instruments.js 1.4.1 (2026-10-31)
+
+# One Instruments page per project: the page file is instruments.html and its folder instruments/.
+repeatable: false
+
+uses: []
+
+# ASKED before founding. The answers go into instruments/instruments-config.js.
+ask:
+  - key: LANE_TOPIC
+    question: Which instrument lane (ntfy topic) carries this project's readings? It is the lane's name only; a relay token is never written into a page.
+  - key: meters
+    question: What is measured (the gauges and the Runs Table columns)? Default - the example, a local model on the Mac as Project-AI-Local's model-sampler.js sends it.
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/instruments/ at every Launch, in every
+# project, used or not. Never edited in a project; readable over the wire, never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/instruments/
+
+# FOUNDED: copied once, then the project's own and never overwritten. Paths on the right are in the project's
+# _docs/_dashboard/.
+found:
+  - from: instruments.html
+    to: instruments.html
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT]
+  - from: example/instruments-config.js
+    to: instruments/instruments-config.js
+    tokens: [LANE_TOPIC, PROJECT_KEY, FOUNDED_AT, FOUNDED_DATE]
+
+# Nothing is built: the page reads its settings file and the lane itself.
+build: null
+
+# The page's settings: window.DASH_INSTRUMENTS in instruments/instruments-config.js, edited by the project. Additive
+# within a major version.
+data:
+  file: instruments/instruments-config.js
+  global: DASH_INSTRUMENTS
+  schema: 1.0.0
+  fields:
+    - name: topic
+      type: string
+      required: true
+      means: the instrument lane, an ntfy topic name
+    - name: relay
+      type: string
+      required: false
+      means: the relay's address; https://ntfy.sh when blank
+    - name: project
+      type: string
+      required: false
+      means: only messages whose project is this are kept; DASH_PROJECT when blank
+    - name: kind
+      type: string
+      required: false
+      means: only messages of this kind are kept; perf when blank
+    - name: since
+      type: string
+      required: false
+      means: how far back the relay is read on opening (ntfy's since, 12h when blank)
+    - name: liveSeconds
+      type: number
+      required: false
+      means: a run with no reading for longer than this, and no result, shows NO RESULT instead of LIVE (30)
+    - name: timeZone
+      type: string
+      required: false
+      means: the IANA zone times are shown in (America/Chicago)
+    - name: subtitle
+      type: string
+      required: false
+      means: the line beside the INSTRUMENTS heading
+    - name: source
+      type: string
+      required: false
+      means: what sends the readings, named at the end of the legend
+    - name: measuredLabel
+      type: string
+      required: false
+      means: the title of a card's measured paragraph (Measured)
+    - name: strip
+      type: list
+      required: false
+      means: 'extra Status Strip fields, each { label, path, digits? }'
+    - name: meters
+      type: list
+      required: true
+      means: 'the gauges, each { key, title, unit, max, digits, warnBelow?, badBelow?, word?, note, what, like, measured, watch, terms }'
+    - name: cards
+      type: list
+      required: false
+      means: 'cards for Runs Table columns with no gauge, each { key, title, what, like, measured, watch, terms }'
+    - name: columns
+      type: list
+      required: false
+      means: 'the Runs Table left to right, each { label, path, digits?, left?, level?, key? }; path is when, model, tag, host, result.x, run.x.y or last.x, or a list of them (the first with a value wins)'
+    - name: terms
+      type: map
+      required: false
+      means: glossary term id to its label on a card
+    - name: legend
+      type: list
+      required: false
+      means: 'each { name, text }, one sentence on a gauge'
+
+# What it reads: one JSON message per relay message, never pattern-matched.
+lane:
+  message: '{ kind, project, runId?, host, model, tag?, seq, phase, metrics: { gauge keys }, run?: { anything a column path names } }'
+  rules: a message with phase result closes its run (metrics are the result, run the extra block); any other phase is a sample; readings group by runId, or by host and model when there is none, a new run starting at seq 1

@@ -1,8 +1,8 @@
 /* ===============================================================
 @file: styles.css
 @filepath: dashboard_engine/_framework/styles.css
-@version: 1.4.0
-@updated: 2026-09-12 08:41:19 AM CDT
+@version: 1.7.0
+@updated: 2026-11-12 09:07:07 PM CST
 @author: Greg Paskal & Claude
 @company: MissionWares®
 @description: The dashboard's shared design system — one token
@@ -25,10 +25,14 @@ Date        Author         Version        Description
 2026-07-30  Greg & Claude  1.2.0          Compact section headings (Greg) — descriptor tag inline beside the title (float:right removed), heading margins tightened 26/14 → 22/12, first heading on a page flush to the top; @filepath corrected to _framework/
 2026-09-05  Greg & Claude  1.3.0          ONE STYLE OWNER — the engine's injected CSS moves here: the five app-shell overrides (body/header/.frame/nav/main) merge into their base rules, the other 54 rules land verbatim as the ENGINE COMPONENTS section; header onto the Core_15 grid with @company and @tags; stale "index.html inline copy" debt note retired (assessment KNOWN FIXES row 9)
 2026-09-12  Greg & Claude  1.4.0          Work-first Home (engine 2.5.0): the board count (.wb-meta, .wb-bar, .wb-growing orange) and the quiet wire line (.wire-line) at the bottom of the work
+2026-10-14  Greg & Claude  1.5.0          AUDIT J-16, J-17 (AiAssist Session 32): .stampkey read the undefined token --t and now uses --dim; quiet text (footer, .count, .wire-line) moves from --faint (about 2.0:1 on the background, below WCAG AA) to the new --faint-text (5.2:1); plan glyphs use --dim (4.3:1, above the 3:1 for symbols); --faint stays for rails and lines; dead rules removed: .zoomrow (the zoom control is one select, .zoomsel) and h2.live-h2 (the LIVE heading left with engine 2.5.0); the ledger vocabulary (rails, pills, prose) stays for the pages that author it
+2026-10-26  Greg & Claude  1.6.0          The Lanes page (engine 2.7.0)
+2026-11-12  Greg & Claude  1.7.0          Page order (engine 2.8.0): the ARRANGE button, the menu's spaces, lines and headings, and the arranger's rows, grip and buttons
 =============================================================== */
 :root{
   --bg:#0B0E14; --panel:#111622; --hair:#232B3D;
   --ink:#D7DEEA; --dim:#6B7690; --faint:#3A4358;
+  --faint-text:#7A859E;   /* 1.5.0 (audit J-17): quiet TEXT, 5.2:1 on --bg; --faint stays for rails and lines */
   --cyan:#3FD8E8; --magenta:#E850A0;
   --step:#79c0ff; --done:#7ee787; --gap:#ffd966; --mod:#ffa657;
   --danger:#ff6b6b;
@@ -78,14 +82,14 @@ h2 .tag{color:var(--dim); letter-spacing:1px; font-weight:400;}
 .row .s{flex:0 0 16px; text-align:center;}
 .row .n{flex:1; color:var(--dim); line-height:1.45;}
 .g-done{color:var(--done);} .g-part{color:var(--gap);}
-.g-plan{color:var(--faint);} .g-live{color:var(--cyan);}
+.g-plan{color:var(--dim);} .g-live{color:var(--cyan);}
 .hit{outline:1px solid var(--gap); border-radius:6px;}
 .hidden{display:none;}
 
 .note{font-size:10px; color:var(--dim); line-height:1.6; margin-top:10px;}
 .note b{color:var(--ink); font-weight:500;}
 footer{padding:18px 28px; border-top:1px solid var(--hair);
-  font-size:9px; letter-spacing:1px; color:var(--faint);}
+  font-size:9px; letter-spacing:1px; color:var(--faint-text);}
 
 /* ── The ledger vocabulary (backlog.html) ─────────────────────── */
 .chips{display:flex; gap:8px; flex-wrap:wrap; margin:2px 0 18px;}
@@ -93,7 +97,7 @@ footer{padding:18px 28px; border-top:1px solid var(--hair);
   border:1px solid var(--hair); border-radius:20px; color:var(--dim);
   cursor:pointer; background:var(--panel); user-select:none;}
 .chip.on{color:var(--cyan); border-color:var(--cyan);}
-.count{font-size:10px; color:var(--faint); letter-spacing:1px; margin:0 0 14px;}
+.count{font-size:10px; color:var(--faint-text); letter-spacing:1px; margin:0 0 14px;}
 .item{display:flex; background:var(--panel); border:1px solid var(--hair);
   border-radius:10px; margin-bottom:14px; overflow:hidden;}
 .item .rail{flex:0 0 4px; background:var(--faint);}
@@ -126,7 +130,6 @@ footer{padding:18px 28px; border-top:1px solid var(--hair);
    purpose: later rules win where they overlap the base rules
    above, exactly as the injected <style> once did.
    =============================================================== */
-.zoomrow{display:flex; gap:4px;}
 .zoomsel{background:var(--panel); color:var(--dim); border:1px solid var(--hair);border-radius:5px; padding:2px 4px; font:inherit; font-size:9px; letter-spacing:1px; cursor:pointer;}
 nav .zoomsel{width:100%; font-size:10px; padding:4px 6px;}
 header .zoomsel{position:absolute; right:18px; bottom:6px;}
@@ -143,7 +146,7 @@ header .zoomsel{position:absolute; right:18px; bottom:6px;}
 .wb-card.wb-poof{transform:scale(0.85); opacity:0; transition:transform .45s ease, opacity .45s ease;}
 .stampstrip{display:flex; gap:18px; flex-wrap:wrap; margin-top:6px; font-size:10px;letter-spacing:.08em; opacity:.75;}
 .stampcell{display:inline-flex; gap:6px; align-items:baseline; cursor:help;}
-.stampkey{color:var(--t); text-transform:uppercase;}
+.stampkey{color:var(--dim); text-transform:uppercase;}
 .stampkeyicon{width:9px; height:9px; margin-left:4px; vertical-align:-1px;}
 .stampval{color:var(--gap);}
 .stampval-sound.unarmed{opacity:.45;}
@@ -173,19 +176,75 @@ header .zoomsel{position:absolute; right:18px; bottom:6px;}
 .wb-s.s-done{color:var(--done);}
 .wb-s.s-live{color:var(--cyan);}
 .wb-s.s-part{color:var(--gap);}
-.wb-s.s-plan{color:var(--faint);}
+.wb-s.s-plan{color:var(--dim);}
 @keyframes wb-flash{0%{box-shadow:0 0 0 2px var(--cyan);} 100%{box-shadow:0 0 0 0 transparent;}}
 .wb-card.wb-updated{animation:wb-flash 1.2s ease-out;}
 nav a.here{color:var(--ink); border-left:2px solid var(--cyan); padding-left:8px; margin-left:-10px;}
 .nbadge{font-size:8px; letter-spacing:1px; color:var(--cyan); margin-left:6px; vertical-align:1px;animation:nbadge-pulse 2.2s ease-in-out infinite;}
 @keyframes nbadge-pulse{0%,100%{opacity:0.55;} 50%{opacity:1;}}
-h2.live-h2{display:flex; justify-content:flex-start; align-items:baseline; gap:14px; margin:0 0 12px 0; padding-bottom:6px;}
 /* 2.5.0 — the count on every board card, and the quiet wire line */
 .wb-meta{margin-left:10px; color:var(--dim); letter-spacing:1px; font-weight:400;}
 .wb-meta.wb-growing{color:var(--mod);}
 .wb-bar{height:4px; background:var(--hair); border-radius:2px; margin:0 0 10px; overflow:hidden;}
 .wb-bar-fill{height:100%; background:var(--done); border-radius:2px; transition:width .4s ease;}
 .wb-bar-fill.wb-growing{background:var(--mod);}
-.wire-line{margin-top:28px; padding-top:10px; border-top:1px solid var(--hair); font-size:10px; letter-spacing:1px; color:var(--faint); cursor:pointer; user-select:none;}
-.wire-line:hover{color:var(--dim);}
+.wire-line{margin-top:28px; padding-top:10px; border-top:1px solid var(--hair); font-size:10px; letter-spacing:1px; color:var(--faint-text); cursor:pointer; user-select:none;}
+.wire-line:hover{color:var(--ink);}
 .wire-line.refused{color:var(--mod);}
+
+/* THE LANES PAGE (engine 2.7.0) */
+#mai-lanes h2{font-size:12px; letter-spacing:2px; color:var(--cyan); margin:22px 0 10px;}
+#mai-lanes h2:first-child{margin-top:0;}
+#mai-lanes .lanes-sub{color:var(--faint-text); font-size:11px; margin-bottom:12px;}
+.lanes-stale{border:1px solid var(--mod); color:var(--mod); background:var(--panel); padding:10px 14px; margin-bottom:14px; font-size:12px;}
+.lanes-closed{border:1px solid var(--danger); color:var(--danger); background:var(--panel); padding:10px 14px; margin-bottom:12px; font-size:12px;}
+.lanes-table{width:100%; border-collapse:collapse; font-size:12px;}
+.lanes-table th{text-align:left; color:var(--dim); font-weight:normal; font-size:10px; letter-spacing:1px; padding:4px 8px; border-bottom:1px solid var(--hair);}
+.lanes-table td{padding:5px 8px; border-bottom:1px solid var(--hair); vertical-align:top;}
+.lanes-path{white-space:nowrap;}
+.lanes-dim{color:var(--faint-text);}
+.lv{display:inline-block; min-width:92px; white-space:nowrap; padding:1px 6px; border:1px solid currentColor; border-radius:3px; font-size:10px; letter-spacing:1px; text-align:center;}
+.lv-full{color:var(--done);}
+.lv-update{color:var(--cyan);}
+.lv-read{color:var(--step);}
+.lv-custom,.lv-mixed{color:var(--mod);}
+.lv-none{color:var(--faint-text);}
+.lv-never{color:var(--danger);}
+.lanes-key{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;}
+.vd-ok{color:var(--done);}
+.vd-warn{color:var(--mod);}
+.vd-bad{color:var(--danger);}
+.vd-live{color:var(--cyan);}
+
+/* PAGE ORDER (engine 2.8.0): the ARRANGE button on the PAGES heading, the spaces, lines and headings the user puts
+   in the menu, and the arranger. Quiet text is --faint-text (5.2:1 on --bg); lines use --faint, as rails do. */
+nav .pages-cap{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+nav.pages-arranging{width:250px; flex-basis:250px;}
+.pages-arrange{display:inline-flex; align-items:center; gap:4px; background:none; border:1px solid transparent; border-radius:4px; padding:1px 5px; font:inherit; font-size:8px; letter-spacing:1px; color:var(--faint-text); cursor:pointer;}
+.pages-arrange svg{width:9px; height:9px;}
+.pages-arrange:hover, .pages-arrange:focus-visible{color:var(--cyan); border-color:var(--hair); outline:none;}
+.pages-arrange.on{color:var(--bg); background:var(--cyan); border-color:var(--cyan);}
+.pages-space{height:12px;}
+.pages-line{height:1px; background:var(--faint); margin:7px 8px;}
+.pages-head{padding:10px 8px 3px; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--faint-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.pages-arranger{margin:2px 0 6px;}
+.pages-elist{display:flex; flex-direction:column; gap:2px;}
+.pages-erow{display:flex; align-items:center; gap:3px; min-height:24px; padding:2px 2px 2px 0; border:1px solid var(--hair); border-radius:5px; background:var(--panel); font-size:11px;}
+.pages-erow.pages-dragging{border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan);}
+.pages-grip{flex:0 0 14px; align-self:stretch; display:flex; align-items:center; justify-content:center; color:var(--faint-text); cursor:grab; touch-action:none; user-select:none;}
+.pages-grip svg{width:6px; height:9px; fill:currentColor;}
+.pages-grip:hover{color:var(--cyan);}
+.pages-dragging .pages-grip{color:var(--cyan); cursor:grabbing;}
+.pages-elabel{flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ink);}
+.pages-erow-space .pages-elabel, .pages-erow-line .pages-elabel{font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--faint-text);}
+nav input.pages-elabel{width:0; padding:2px 5px; font-size:9px; letter-spacing:1px; text-transform:uppercase;}
+.pages-ebtn{flex:0 0 16px; height:16px; display:inline-flex; align-items:center; justify-content:center; padding:0; background:none; border:1px solid transparent; border-radius:3px; font:inherit; font-size:8px; line-height:1; color:var(--faint-text); cursor:pointer;}
+.pages-ebtn:hover:not([disabled]), .pages-ebtn:focus-visible{color:var(--cyan); border-color:var(--hair); outline:none;}
+.pages-ebtn-remove{font-size:12px;}
+.pages-ebtn-remove:hover:not([disabled]){color:var(--danger);}
+.pages-ebtn[disabled]{opacity:.25; cursor:default;}
+.pages-etools{display:flex; flex-wrap:wrap; gap:4px; margin-top:8px;}
+.pages-btn{background:var(--panel); border:1px solid var(--hair); border-radius:20px; padding:3px 7px; font:inherit; font-size:8px; letter-spacing:1px; color:var(--faint-text); cursor:pointer;}
+.pages-btn:hover, .pages-btn:focus-visible{color:var(--cyan); border-color:var(--cyan); outline:none;}
+.pages-btn-done{color:var(--bg); background:var(--cyan); border-color:var(--cyan);}
+.pages-btn-done:hover, .pages-btn-done:focus-visible{color:var(--bg); background:var(--ink); border-color:var(--ink);}

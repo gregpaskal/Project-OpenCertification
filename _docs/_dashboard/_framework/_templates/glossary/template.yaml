@@ -1,0 +1,91 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/glossary/template.yaml
+# @version: 1.0.0
+# @updated: 2026-11-13 05:16:26 PM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The Glossary page type, in the form AiAssist and a chat read: its identity, the shared part it uses, the
+#   questions asked before it is founded, how it is stamped into every project, what founding copies and where, how its
+#   data is built, and the schema of that data. Read with a real YAML parser, never by string matching (Core_10 rule 6).
+# @tags: template, page-type, glossary, lexicon, codex, topics, schema
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-13  Greg & Claude  1.0.0          The Glossary page type: one per project, uses the Ask part, three founding questions, stamped folder, two founded files, data built by glossary-export.js, Codex schema 1.6 (GLOSSARY-SCHEMA.md 1.7.0)
+# ===============================================================
+type: glossary
+title: Glossary
+need: optional
+templateVersion: 1.0.0
+description: The words a project uses, each with a plain meaning, an analogy and its source, searchable, filtered by one or more topics, with an Index in learning order; Ask on every card talks a term through with a model on this Mac.
+harvestedFrom: Project-AI-Local, _docs/_dashboard/glossary.html 2.4.1, glossary.js 2.4.1, glossary-ask.js 1.0.2, glossary-ask.css 1.0.0, glossary/GLOSSARY-SCHEMA.md 1.6.0, _tools/glossary-export.js 1.4.0 (2026-11-04)
+
+# One Glossary per project (Greg, 2026-11-13: one glossary, with filters to focus on one or more areas of knowledge):
+# the page file is glossary.html and its data folder glossary/. The areas are the data's topics.
+repeatable: false
+
+# The shared parts it loads from _framework/_parts/ (stamped with the engine).
+uses: [ask]
+
+# ASKED before founding; each has a default, so "use the defaults" is a full answer. The answers go into
+# glossary/glossary.json.
+ask:
+  - key: about
+    question: Who reads the glossary, in one sentence (Ask opens "You are the Ask helper in the <project> Glossary." and then this line)? Default - the reader wants to understand the words this project uses, in plain terms, and how they connect.
+  - key: topics
+    question: What areas of knowledge (topics) should the terms be grouped in, in learning order? Default - start with the example's two topics and replace them as terms arrive.
+  - key: domains
+    question: Who else hears these words differently (listener domains, for the Risk at a glance bar)? Default - This project, Software Developer, General Public; or none, to leave the bar out.
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/glossary/ at every Launch, in every
+# project, used or not. Never edited in a project; readable over the wire, never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/glossary/
+
+# FOUNDED: copied once, then the project's own and never overwritten. Paths on the right are in the project's
+# _docs/_dashboard/. glossary.json is the single source of truth; the project edits it and rebuilds.
+found:
+  - from: glossary.html
+    to: glossary.html
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT]
+  - from: example/glossary.json
+    to: glossary/glossary.json
+    tokens: [PROJECT_NAME]
+
+# BUILT, never copied: glossary/glossary-data.js comes from glossary/glossary.json through glossary-export.js, at founding
+# and whenever the json changes ("update the glossary"). Pictures live in glossary/illustrations/ (rule 15).
+build:
+  tool: glossary-export.js
+  reads: [_docs/_dashboard/glossary/glossary.json]
+  writes: glossary/glossary-data.js
+
+# The page's data: window.DASH_GLOSSARY in glossary/glossary-data.js, generated and never edited by hand. The full
+# contract is GLOSSARY-SCHEMA.md in this folder (the Lexicon Codex curriculum shape, schema 1.6). Additive within a
+# major version: a term without the newer fields draws as before.
+data:
+  file: glossary/glossary-data.js
+  global: DASH_GLOSSARY
+  schema: '1.6'
+  contract: GLOSSARY-SCHEMA.md
+  fields:
+    - name: curriculum
+      type: map
+      required: true
+      means: 'id, name, short_name, version; optional ask { about, models }, listener_domains { default, domains }, topics [{ id, name, description, terms }]'
+    - name: sources
+      type: list
+      required: false
+      means: 'each { source_id, title, type, kind?, publisher?, url? (https), accessed? }'
+    - name: catalogs
+      type: list
+      required: false
+      means: 'outside numbered lists terms answer to, each { catalog_id, name, entries [{ id, title, url?, group? }], term_id?, entry_label? }'
+    - name: term_count
+      type: number
+      required: true
+      means: the number of terms, checked against the list
+    - name: terms
+      type: list
+      required: true
+      means: 'each { term_id, term, definitions { official { text, source_id }, layman { universal [plain, analogy] } } } plus optional abbreviation, synonyms, relationships, references, etymology, polysemy, visibility, review, vetting, catalog_refs, illustration, tribal_knowledge.real_world_note'

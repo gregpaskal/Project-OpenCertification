@@ -1,0 +1,43 @@
+/* ===============================================================
+@file: test-results.css
+@filepath: dashboard_engine/_framework/_templates/test-results/test-results.css
+@version: 1.0.0
+@updated: 2026-11-14 07:07:33 PM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Test Results page type's look: the run cards and their verdicts, the facts, the failed, blocked and
+  suspect lists, the suite grid and history tables, and the live run's progress bar. Uses the engine's colors
+  (styles.css): done for passed, danger for failed, gap for blocked, suspect and stale, cyan for a run in progress.
+  Every class carries the tr- prefix. A STAMPED file: changed only at the engine home.
+@tags: template, page-type, test-results, styles
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-14  Greg & Claude  1.0.0          Harvested from Automation-JAV-Framework results.html 1.2.4 (its style block): rs- renamed tr-, the running verdict's inline color made tr-running, the blocked and suspect list rows merged into their color rules
+=============================================================== */
+
+.tr-table{border-collapse:collapse; width:100%; font-size:11px;}
+.tr-table th{color:var(--dim); font-weight:400; letter-spacing:1px; text-align:left; padding:6px 10px; border-bottom:1px solid var(--hair); white-space:nowrap;}
+.tr-table td{padding:6px 10px; border-bottom:1px solid var(--hair); white-space:nowrap;}
+.tr-table td.num, .tr-table th.num{text-align:right;}
+.tr-pass{color:var(--done);}
+.tr-fail{color:var(--danger);}
+.tr-dim{color:var(--faint-text);}
+.tr-card{background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:16px 18px;}
+.tr-verdict{font-size:15px; letter-spacing:2px; font-weight:600;}
+.tr-running{color:var(--cyan);}
+.tr-facts{display:flex; flex-wrap:wrap; gap:8px 26px; margin-top:12px;}
+.tr-fact .k{display:block; font-size:9px; letter-spacing:2px; color:var(--dim);}
+.tr-fact .v{font-size:13px;}
+.tr-fails{margin-top:14px;}
+.tr-fails li{list-style:none; margin-top:6px; color:var(--danger); white-space:normal;}
+.tr-fails li .tr-dim{display:block; margin-top:2px;}
+.tr-fails li.tr-blocked, .tr-fails li.tr-suspect{color:var(--gap);}
+.tr-cell-fail{background:rgba(255,107,107,0.16); color:var(--danger);}
+.tr-cell-none{color:var(--faint);}
+.tr-scroll{overflow-x:auto;}
+.tr-empty{color:var(--dim);}
+.tr-live{border-color:var(--cyan);}
+.tr-bar{height:8px; background:var(--hair); border-radius:4px; margin-top:12px; overflow:hidden;}
+.tr-bar-fill{height:100%; background:var(--cyan); transition:width 0.6s;}
+.tr-stale, .tr-blocked, .tr-suspect{color:var(--gap);}

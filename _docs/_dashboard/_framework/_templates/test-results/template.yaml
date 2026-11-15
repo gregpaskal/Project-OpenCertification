@@ -1,0 +1,120 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/test-results/template.yaml
+# @version: 1.0.0
+# @updated: 2026-11-14 07:07:33 PM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The Test Results page type, in the form AiAssist and a chat read: its identity, that nothing is asked
+#   before it is founded, how it is stamped into every project, what founding copies and where, and the schema of the
+#   two data files the mAi Framework's FW_TestRunResults writes. Read with a real YAML parser, never by string matching
+#   (Core_10 rule 6).
+# @tags: template, page-type, test-results, mai-framework, schema
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-14  Greg & Claude  1.0.0          The Test Results page type: one per project, no founding question, stamped folder, one founded file, data written by the framework's FW_TestRunResults (no build), schema 1.0.0
+# ===============================================================
+type: test-results
+title: Test Results
+need: optional
+templateVersion: 1.0.0
+description: The test runs of an mAi Framework project, live from the files the framework writes - the run in progress, the latest run with what failed, was blocked or is suspect, each suite across the last 12 runs, and the full history.
+harvestedFrom: Automation-JAV-Framework, _docs/_dashboard/results.html 1.2.4 (2026-11-05)
+
+# One Test Results page per project: the page file is test-results.html. It has no folder of its own; its data lives
+# where the framework writes it, _docs/_test_results/.
+repeatable: false
+
+uses: []
+
+# Nothing is asked: the data paths are fixed by the framework, so founding needs only the project's identity.
+ask: []
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/test-results/ at every Launch, in every
+# project, used or not. Never edited in a project; readable over the wire, never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/test-results/
+
+# FOUNDED: copied once, then the project's own and never overwritten. The path on the right is in the project's
+# _docs/_dashboard/.
+found:
+  - from: test-results.html
+    to: test-results.html
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT]
+
+# Nothing is built by a chat or a type tool: the project's own Java writes both files, framework.data.FW_TestRunResults,
+# one record when a run finishes and the status while it runs. The page reads them again on a timer (8 and 4 seconds).
+build: null
+
+# The page's data, written by the framework and never edited by hand. Paths are from the project root. Additive within
+# a major version.
+data:
+  file: _docs/_test_results/results-data.js
+  global: MAI_RESULTS
+  schema: 1.0.0
+  fields:
+    - name: (the global itself)
+      type: list
+      required: true
+      means: 'one record per run, oldest first; each { at, epoch, kind, label, runId, framework, config, pom, tests, failures, errors, skipped, checkstyle, build (SUCCESS, FAILURE or null when the framework recorded it), totalTime, suites [{ name, tests, failures, errors, skipped, seconds, suspect }], failed [{ suite, test, kind, first }], blocked, blockedTests [{ test, outcome, first }], suspectSteps, suspectCases, suspectSuites, suspectTests [{ suite, test, steps, first }] }; a count is null when the run did not report it'
+  also:
+    file: _docs/_test_results/run-status.js
+    global: MAI_RUN_STATUS
+    fields:
+      - name: state
+        type: string
+        required: true
+        means: running, finished, or anything else for finished with failures
+      - name: phase
+        type: string
+        required: true
+        means: what the run is doing now, shown while it runs
+      - name: label
+        type: string
+        required: true
+        means: the run's label
+      - name: suite
+        type: string
+        required: false
+        means: the suite now running
+      - name: testCase
+        type: string
+        required: false
+        means: the test case now running
+      - name: executing
+        type: number
+        required: true
+        means: the number of the test case now running
+      - name: total
+        type: number
+        required: true
+        means: the test cases in the run; 0 when not known yet
+      - name: failuresSoFar
+        type: number
+        required: true
+        means: failures so far
+      - name: errorsSoFar
+        type: number
+        required: true
+        means: errors so far
+      - name: blockedSoFar
+        type: number
+        required: false
+        means: test cases blocked by the provider so far
+      - name: suspectSoFar
+        type: number
+        required: false
+        means: steps not on their test case's step list so far
+      - name: updated
+        type: string
+        required: true
+        means: when the status was written, in CDT or CST
+      - name: epoch
+        type: number
+        required: true
+        means: the same moment in Unix seconds; over 30 seconds old while running means the run may have stopped
+      - name: elapsedSeconds
+        type: number
+        required: true
+        means: seconds since the run began

@@ -1,0 +1,79 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/listing/template.yaml
+# @version: 1.0.0
+# @updated: 2026-11-13 09:07:14 AM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The Listing page type, in the form AiAssist and a chat read: its identity, the questions asked before a
+#   page is founded, how it is stamped into every project, what founding a page copies and where, and the schema of the
+#   page's data. The first repeatable type: a project may found many Listing pages, each under its own name. Read with
+#   a real YAML parser, never by string matching (Core_10 rule 6).
+# @tags: template, page-type, listing, repeatable, schema
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-13  Greg & Claude  1.0.0          The Listing page type: repeatable, four founding questions, stamped folder, two founded files, schema 1.0.0
+# ===============================================================
+type: listing
+title: Listing
+need: optional
+templateVersion: 1.0.0
+description: A table of rows under columns the page names, where a cell holds text, a link or a list of both.
+harvestedFrom: Project-mAi-Methodology, _docs/_dashboard/dashboard-templates.html 1.0.0, dashboard-templates.js 1.1.0, dashboard-templates.css 1.1.0 (2026-11-13)
+
+# REPEATABLE: a project may found this type more than once. Each page is founded under a slug chosen at founding
+# (PAGE_SLUG), which names its page file and its data folder in place of the type's name; mai-page-type still reads
+# listing. A page is "there already" when a page file with that slug exists.
+repeatable: true
+
+# ASKED before founding, in this order (Greg, 2026-11-13). The answers become the tokens below and the data file's
+# columns.
+ask:
+  - key: MENU_NAME
+    question: What should the PAGES menu call it?
+  - key: PAGE_TITLE
+    question: What is the page's title (shown in the header and above the table)?
+  - key: columns
+    question: How many columns, and what does each hold (text, code, or links)?
+  - key: rows
+    question: Where do the rows come from (this page's own data file, filled now or added to over time, or a list kept elsewhere)?
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/listing/ at every Launch, in every
+# project, used or not. Never edited in a project; readable over the wire, never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/listing/
+
+# FOUNDED: copied once per page, then the project's own and never overwritten. Paths on the left are in this folder;
+# paths on the right are in the project's _docs/_dashboard/, with PAGE_SLUG swapped. PAGE_SLUG is the menu name in
+# lowercase words joined by hyphens (Reading List: reading-list). PAGE_INTRO is one or two plain sentences on what the
+# list is. FOUNDED_DATE is the founding day, YYYY-MM-DD.
+found:
+  - from: listing.html
+    to: '{{PAGE_SLUG}}.html'
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT, PAGE_SLUG, PAGE_TITLE, MENU_NAME, PAGE_INTRO]
+  - from: example/listing-data.js
+    to: '{{PAGE_SLUG}}/{{PAGE_SLUG}}-data.js'
+    tokens: [PAGE_SLUG, PAGE_TITLE, FOUNDED_AT, FOUNDED_DATE]
+
+# The page's data: window.DASH_LISTING in <slug>/<slug>-data.js. Additive within a major version: a field is only ever
+# added, never renamed, retyped or removed; a page reads the fields it knows, ignores the rest, and shows a missing field
+# blank. A page may point its table at a list kept elsewhere instead (another global, loaded by its own script include,
+# named in the mount's data-source), as the Dashboard Templates page does.
+data:
+  file: '{{PAGE_SLUG}}/{{PAGE_SLUG}}-data.js'
+  global: DASH_LISTING
+  schema: 1.0.0
+  fields:
+    - name: schema
+      type: string
+      required: false
+      means: the schema version the file was written to
+    - name: columns
+      type: list
+      required: true
+      means: 'the table''s columns in order, each { key, label, kind }: key names the row field, label the heading (key when blank), kind is text (the default) or code'
+    - name: rows
+      type: list
+      required: true
+      means: 'one object per row; each column''s key holds its cell: text, a link { text, href, open } or a list of both'

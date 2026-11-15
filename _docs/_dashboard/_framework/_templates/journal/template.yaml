@@ -1,0 +1,91 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/journal/template.yaml
+# @version: 1.0.0
+# @updated: 2026-11-13 05:16:26 PM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The Journal page type, in the form AiAssist and a chat read: its identity, the questions asked before it
+#   is founded, how it is stamped into every project, what founding copies and where, how its data is built, and the
+#   schema of that data. Read with a real YAML parser, never by string matching (Core_10 rule 6).
+# @tags: template, page-type, journal, search, schema
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-13  Greg & Claude  1.0.0          The Journal page type: one per project, one founding question, stamped folder, three founded files (the page, its settings and a first entry), data built by journal-export.js, schema 1.0.0
+# ===============================================================
+type: journal
+title: Journal
+need: optional
+templateVersion: 1.0.0
+description: Knowledge worth keeping, one Markdown file per entry, shown by date, by tag and by glossary term, with one Search across the glossary, the journal and the project's technical docs.
+harvestedFrom: Project-AI-Local, _docs/_dashboard/journal.html 1.0.0, journal.js 1.0.0, search.js 1.0.0, _tools/journal-export.js 1.0.0 (2026-10-31)
+
+# One Journal per project: the page file is journal.html and its folder journal/, which holds the entries.
+repeatable: false
+
+# The Glossary, when the project has one, is read at build time (term names and Search); the page loads no glossary file.
+uses: []
+
+# ASKED before founding; it has a default, so "use the defaults" is a full answer. The answer goes into
+# journal/journal-config.js.
+ask:
+  - key: docs
+    question: Which technical documents should Search cover, as .md paths from the project root? Default - _docs/_capabilities/CAPABILITIES.md.
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/journal/ at every Launch, in every
+# project, used or not. Never edited in a project; readable over the wire, never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/journal/
+
+# FOUNDED: copied once, then the project's own and never overwritten. Paths on the right are in the project's
+# _docs/_dashboard/. FOUNDED_DATE is the founding day, YYYY-MM-DD; FOUNDED_AT the founding stamp in CDT or CST.
+found:
+  - from: journal.html
+    to: journal.html
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT]
+  - from: example/journal-config.js
+    to: journal/journal-config.js
+    tokens: [FOUNDED_AT, FOUNDED_DATE]
+  - from: example/keeping-a-journal.md
+    to: 'journal/{{FOUNDED_DATE}}-keeping-a-journal.md'
+    tokens: [FOUNDED_AT, FOUNDED_DATE]
+
+# BUILT, never copied: journal-export.js reads every journal/*.md, the docs journal-config.js names and, when present,
+# glossary/glossary.json, and writes the two data files, at founding and whenever an entry or a listed doc changes
+# ("update the journal").
+build:
+  tool: journal-export.js
+  reads: [_docs/_dashboard/journal/*.md, _docs/_dashboard/journal/journal-config.js, _docs/_dashboard/glossary/glossary.json, the docs journal-config.js lists]
+  writes: [journal/journal-data.js, journal/docs-data.js]
+
+# The page's data, generated and never edited by hand. Additive within a major version.
+data:
+  file: journal/journal-data.js
+  global: DASH_JOURNAL
+  schema: 1.0.0
+  fields:
+    - name: entries
+      type: list
+      required: true
+      means: 'each { id, file, title, date, version, updated, status (seed, growing or settled), description, tags, terms, related, sections [{ id, title }], html, text }'
+    - name: count
+      type: number
+      required: true
+      means: the number of entries
+  also:
+    file: journal/docs-data.js
+    global: DASH_DOCS
+    fields:
+      - name: sections
+        type: list
+        required: true
+        means: 'each doc section { id, doc, path, title, html, text }, split at ## headings'
+      - name: glossary
+        type: boolean
+        required: true
+        means: whether the project has a Glossary (By term and the term links are offered only then)
+      - name: terms
+        type: list
+        required: true
+        means: 'the glossary terms for Search and By term, each { id, term, keys, text }; empty without a Glossary'

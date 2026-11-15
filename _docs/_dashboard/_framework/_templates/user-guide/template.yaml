@@ -1,0 +1,125 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/user-guide/template.yaml
+# @version: 2.0.0
+# @updated: 2026-11-13 04:51:30 PM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The User Guide page type (key user-guide), in the form AiAssist and a chat read: its identity, the shared part it uses, the
+#   questions asked before it is founded, how it is stamped into every project, what founding copies and where, how its
+#   data is built, and the schema of that data. Read with a real YAML parser, never by string matching (Core_10 rule 6).
+# @tags: template, page-type, user-guide, capabilities, schema
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-13  Greg & Claude  1.0.0          The Guide page type: one per project, uses the Ask part, two founding questions, stamped folder, two founded files, data built by guide-export.js, schema 1.0.0
+# 2026-11-13  Greg & Claude  1.1.0          Named User Guide (Greg: a searchable, AI integrated guide to using the project's tools and processes, and to asking about the project); the type key stays guide; templateVersion 1.1.0
+# 2026-11-13  Greg & Claude  2.0.0          Renamed from the guide type to user-guide (Greg: get everything changed over to user guide): the type key, folder, file names, page file user-guide.html, data folder user-guide/, globals DASH_USER_GUIDE and UG_TEMPLATE_VERSION, the ug- class prefix, storage keys and the update the user guide trigger
+# ===============================================================
+type: user-guide
+title: User Guide
+need: optional
+templateVersion: 2.0.0
+description: A searchable, AI integrated user guide to the project's tools and processes, built from its CAPABILITIES.md, for coming back after time away; Ask the User Guide answers how-to questions and questions about the project from a model on this Mac.
+harvestedFrom: Project-AI-Local, _docs/_dashboard/guide.html 1.0.1, guide.js 1.0.1, _tools/guide-export.js 1.0.1 (2026-11-04)
+
+# One User Guide per project: the page file is user-guide.html and its data folder user-guide/.
+repeatable: false
+
+# The shared parts it loads from _framework/_parts/ (stamped with the engine).
+uses: [ask]
+
+# ASKED before founding; both have a default, so "use the defaults" is a full answer. The answers go into
+# user-guide/user-guide-config.js.
+ask:
+  - key: about
+    question: Who is the User Guide for, in one sentence (it finishes "You are the User Guide for ...")? Default - this project, a searchable guide to using its tools and processes, for the reader coming back after time away or with a question about the project.
+  - key: groups
+    question: Should the capabilities be grouped (each group a name and a one-line blurb, and each capability a "Guide group" bullet in CAPABILITIES.md), or shown as one list?
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/user-guide/ at every Launch, in every project,
+# used or not. Never edited in a project; readable over the wire, never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/user-guide/
+
+# FOUNDED: copied once, then the project's own and never overwritten. Paths on the right are in the project's
+# _docs/_dashboard/.
+found:
+  - from: user-guide.html
+    to: user-guide.html
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT]
+  - from: example/user-guide-config.js
+    to: user-guide/user-guide-config.js
+    tokens: [FOUNDED_AT, FOUNDED_DATE]
+
+# BUILT, never copied: user-guide/user-guide-data.js comes from the project's CAPABILITIES.md through user-guide-export.js, at founding
+# and whenever CAPABILITIES.md changes ("update the user guide"). The export reads three inputs laid out as in the project:
+# _docs/_capabilities/CAPABILITIES.md, _docs/_dashboard/user-guide/user-guide-config.js and _docs/_dashboard/_data/site-data.js.
+build:
+  tool: user-guide-export.js
+  reads: [_docs/_capabilities/CAPABILITIES.md, _docs/_dashboard/user-guide/user-guide-config.js, _docs/_dashboard/_data/site-data.js]
+  writes: user-guide/user-guide-data.js
+
+# The page's data: window.DASH_USER_GUIDE in user-guide/user-guide-data.js, generated and never edited by hand. Additive within a
+# major version.
+data:
+  file: user-guide/user-guide-data.js
+  global: DASH_USER_GUIDE
+  schema: 1.0.0
+  fields:
+    - name: source
+      type: string
+      required: true
+      means: the source file, _docs/_capabilities/CAPABILITIES.md
+    - name: version
+      type: string
+      required: true
+      means: the source's @version, so a stale User Guide is visible
+    - name: sha256
+      type: string
+      required: true
+      means: the source's sha256
+    - name: asOf
+      type: string
+      required: false
+      means: the source's As of line
+    - name: about
+      type: string
+      required: false
+      means: who the User Guide is for (finishes "You are the User Guide for ..."); from user-guide-config.js
+    - name: placeholder
+      type: string
+      required: false
+      means: the Ask box's placeholder question
+    - name: starters
+      type: list
+      required: false
+      means: the first questions offered under Ask the User Guide
+    - name: models
+      type: list
+      required: false
+      means: the preferred models, first that exists wins
+    - name: pages
+      type: map
+      required: false
+      means: page file to menu label, from the courier's manifest; only these become page links
+    - name: groups
+      type: list
+      required: true
+      means: 'each { id, name, blurb }; a capability with no known group goes to other (More, or Capabilities when it is the only group)'
+    - name: sections
+      type: list
+      required: true
+      means: 'each capability { n, id, title, use, useLabel?, group, say, run, pages, fields: [{ label, text }] }'
+    - name: rules
+      type: list
+      required: false
+      means: the rules that govern using them, one string each
+    - name: threads
+      type: list
+      required: false
+      means: the open threads, one string each
+    - name: changes
+      type: list
+      required: false
+      means: 'the changelog, newest first, each { date, version, text }'

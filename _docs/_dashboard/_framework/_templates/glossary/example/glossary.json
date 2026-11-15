@@ -1,0 +1,120 @@
+{
+  "curriculum": {
+    "id": "project-glossary",
+    "name": "{{PROJECT_NAME}} Glossary",
+    "short_name": "Glossary",
+    "version": "1.0.0",
+    "schema_version": "1.6",
+    "description": "The words this project uses, each with a plain meaning, an analogy and where it comes from. A small example from the Glossary page type: replace these terms with the project's own.",
+    "ask": {
+      "about": "The reader wants to understand the words this project uses, in plain terms, and how they connect."
+    },
+    "listener_domains": {
+      "default": "this-project",
+      "domains": [
+        { "id": "this-project", "name": "This project" },
+        { "id": "software-developer", "name": "Software Developer" },
+        { "id": "general-public", "name": "General Public" }
+      ]
+    },
+    "topics": [
+      { "id": "pages", "name": "Pages", "description": "How a dashboard page comes to be and what it is made of.", "terms": ["page-type", "template", "founded-file", "stamped-file", "shared-part"] },
+      { "id": "moving-work", "name": "Moving work", "description": "How files travel between a session and the project.", "terms": ["launch", "courier"] }
+    ]
+  },
+  "sources": [
+    { "source_id": "engine-readme", "title": "Dashboard engine README", "type": "specification", "kind": "documentation", "publisher": "MissionWares" },
+    { "source_id": "templates-readme", "title": "Page types README (_framework/_templates/README.md)", "type": "specification", "kind": "documentation", "publisher": "MissionWares" }
+  ],
+  "term_count": 7,
+  "terms": [
+    {
+      "term_id": "page-type",
+      "term": "Page type",
+      "synonyms": ["page template"],
+      "definitions": {
+        "official": { "text": "A kind of dashboard page kept once at the engine home, with its starting page, its look, its behavior and the schema of its data, so every project builds that kind of page the same way.", "source_id": "templates-readme" },
+        "layman": { "universal": ["A ready-made kind of page, such as a Glossary or a Listing, that any project can add.", "A cookie cutter: the shape is made once, and every kitchen cuts the same cookie from its own dough."] }
+      },
+      "relationships": [
+        { "term_id": "founded-file", "type": "part-of", "description": "Founding copies a page type's starting files into a project." },
+        { "term_id": "template", "type": "related", "description": "People often say template when they mean a page type." }
+      ],
+      "references": [ { "source_id": "templates-readme", "supports": "definition", "context": "Describes what a page type holds and how it reaches a project." } ]
+    },
+    {
+      "term_id": "template",
+      "term": "Template",
+      "definitions": {
+        "official": { "text": "In this project, a page type: a kind of dashboard page kept at the engine home and founded in a project.", "source_id": "templates-readme" },
+        "layman": { "universal": ["Here it names a kind of page a project can add; elsewhere it often means a file to copy and fill in.", "A recipe card: here it names a whole dish anyone can make, while in an office it is often a blank form."] }
+      },
+      "etymology": { "text": "From French *templet*, a small timber or gauge, from Latin *templum* in its sense of a plank; the spelling later followed *plate*. A gauge shapes every piece the same way.", "confidence": "probable" },
+      "polysemy": {
+        "home_domain": "this-project",
+        "meanings": [
+          { "meaning_id": "page-type", "name": "A page type", "official": true, "domain": "this-project", "weights": { "this-project": 4, "software-developer": 1, "general-public": 0 } },
+          { "meaning_id": "code-template", "name": "Code with blanks to fill", "text": "Source text with placeholders a tool fills in, such as an HTML template rendered with data.", "domain": "software-developer", "weights": { "this-project": 2, "software-developer": 4, "general-public": 1 } },
+          { "meaning_id": "document-template", "name": "A document to copy", "text": "A starting document, such as a letter or a slide layout, copied and then edited.", "domain": "general-public", "weights": { "this-project": 1, "software-developer": 2, "general-public": 4 } }
+        ],
+        "drift": { "this-project": { "level": 1, "reason": "Also used for the starting files inside a page type." } },
+        "judgment": { "measured": false, "by": "Claude", "reviewed_by": null, "date": "2026-11-13" }
+      },
+      "relationships": [ { "term_id": "page-type", "type": "related", "description": "What template means here." } ],
+      "references": [ { "source_id": "templates-readme", "supports": "meaning:page-type", "context": "Uses template and page type for the same thing." } ]
+    },
+    {
+      "term_id": "founded-file",
+      "term": "Founded file",
+      "definitions": {
+        "official": { "text": "A file copied once from a page type into a project, with its tokens swapped, that belongs to the project from then on and is never overwritten.", "source_id": "templates-readme" },
+        "layman": { "universal": ["A starting file that becomes the project's own the moment it is copied in.", "A house built from a plan: the plan stays at the architect's, and the house is yours to paint."] }
+      },
+      "relationships": [ { "term_id": "stamped-file", "type": "contrast", "description": "A stamped file is replaced at every Launch; a founded file never is." } ],
+      "references": [ { "source_id": "templates-readme", "supports": "definition", "context": "Defines founding and what it copies." } ]
+    },
+    {
+      "term_id": "stamped-file",
+      "term": "Stamped file",
+      "definitions": {
+        "official": { "text": "A file kept at the engine home and copied into every project at every Launch; it is changed only at the engine home, never in a project.", "source_id": "engine-readme" },
+        "layman": { "universal": ["A shared file every project gets a fresh copy of, so a fix made once reaches them all.", "A printed timetable: the station prints it, and every platform posts the same sheet."] }
+      },
+      "relationships": [
+        { "term_id": "launch", "type": "related", "description": "Launch is what copies stamped files in." },
+        { "term_id": "founded-file", "type": "contrast", "description": "A founded file belongs to the project and is never replaced." }
+      ],
+      "references": [ { "source_id": "engine-readme", "supports": "definition", "context": "Explains how the engine and its page types reach every project." } ]
+    },
+    {
+      "term_id": "shared-part",
+      "term": "Shared part",
+      "definitions": {
+        "official": { "text": "A piece of behavior several page types load from _framework/_parts/, such as the Ask part, which reaches a model on this Mac.", "source_id": "templates-readme" },
+        "layman": { "universal": ["One piece of code that several kinds of page use, written once.", "A shared power outlet: every appliance plugs into the same socket instead of carrying its own generator."] }
+      },
+      "relationships": [ { "term_id": "page-type", "type": "related", "description": "A page type names the parts it uses." } ],
+      "references": [ { "source_id": "templates-readme", "supports": "definition", "context": "Describes shared parts and how a type names them." } ]
+    },
+    {
+      "term_id": "launch",
+      "term": "Launch",
+      "definitions": {
+        "official": { "text": "The AiAssist step that copies the engine home, its page types and shared parts included, into a project's dashboard. It copies new and changed files; it never removes a file.", "source_id": "engine-readme" },
+        "layman": { "universal": ["The button that brings a project up to date with the shared engine.", "A delivery truck: it drops off every new box, but it never takes old ones away."] }
+      },
+      "relationships": [ { "term_id": "stamped-file", "type": "related", "description": "What Launch carries." } ],
+      "references": [ { "source_id": "engine-readme", "supports": "definition", "context": "Describes stamping at every Launch." } ]
+    },
+    {
+      "term_id": "courier",
+      "term": "Courier",
+      "definitions": {
+        "official": { "text": "The program that lands files sent from a session into the project and keeps the dashboard's page list (_data/site-data.js) in step: a landed page joins it, a deleted page leaves it.", "source_id": "engine-readme" },
+        "layman": { "universal": ["The helper that puts delivered files in place and updates the menu.", "A mail carrier who also updates the building directory when a tenant moves in or out."] }
+      },
+      "relationships": [ { "term_id": "launch", "type": "contrast", "description": "Launch copies the shared engine; the courier lands a session's own files." } ],
+      "references": [ { "source_id": "engine-readme", "supports": "definition", "context": "Notes the courier's page list." } ]
+    }
+  ]
+}

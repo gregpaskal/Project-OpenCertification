@@ -1,0 +1,70 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/diagrams/template.yaml
+# @version: 1.0.1
+# @updated: 2026-11-12 08:09:17 PM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The Diagrams page type, in the form AiAssist reads: its identity, how it is stamped into every project,
+#   what founding a page copies and where, and the schema of the page's data. Read with a real YAML parser, never by
+#   string matching (Core_10 rule 6).
+# @tags: template, page-type, diagrams, schema, aiassist
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-12  Greg & Claude  1.0.0          The Diagrams page type: stamped folder, three founded files, schema 1.0.0
+# 2026-11-12  Greg & Claude  1.0.1          Moved with the engine: the page types now live in dashboard_engine/_framework/_templates/, so AiAssist copies them with the engine (framework entry "- _framework/"); @filepath follows, template 1.0.1; templateVersion 1.0.1; stamp.to unchanged
+# ===============================================================
+type: diagrams
+title: Diagrams
+need: optional
+templateVersion: 1.0.1
+description: A catalog of the project's diagrams as cards, each opening full window on an infinite pan-and-zoom canvas.
+harvestedFrom: Project-AI-Local, _docs/_dashboard/diagrams.html 1.0.1, diagrams.js 1.0.0, diagrams.css 1.1.0 (2026-10-31)
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/diagrams/ at every Launch, in every
+# project, used or not, so a dashboard knows the type exists. Never edited in a project; readable over the wire,
+# never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/diagrams/
+
+# FOUNDED: copied once when a project adopts the page, then the project's own and never overwritten. Paths on the left
+# are in this folder; paths on the right are in the project's _docs/_dashboard/.
+found:
+  - from: diagrams.html
+    to: diagrams.html
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT]
+  - from: example/diagrams-data.js
+    to: diagrams/diagrams-data.js
+  - from: example/svg/dg-example.svg
+    to: diagrams/svg/dg-example.svg
+
+# The page's data: window.DASH_DIAGRAMS in diagrams/diagrams-data.js. Additive within a major version: a field is only
+# ever added, never renamed, retyped or removed; a page reads the fields it knows, ignores the rest, and shows a
+# missing field blank; a retired field stops being written and is marked here with its date.
+data:
+  file: diagrams/diagrams-data.js
+  global: DASH_DIAGRAMS
+  schema: 1.0.0
+  list: diagrams
+  fields:
+    - name: id
+      type: string
+      required: true
+      means: the card's anchor id, unique on the page, also its link (diagrams.html#id)
+    - name: file
+      type: string
+      required: true
+      means: the SVG's file name in diagrams/svg/
+    - name: title
+      type: string
+      required: false
+      means: the card heading; the id when blank
+    - name: added
+      type: string
+      required: false
+      means: the date the diagram joined the page, YYYY-MM-DD
+    - name: summary
+      type: string
+      required: false
+      means: two or three plain sentences on what the diagram shows

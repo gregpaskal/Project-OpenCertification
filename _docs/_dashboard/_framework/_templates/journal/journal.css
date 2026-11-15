@@ -1,0 +1,73 @@
+/* ===============================================================
+@file: journal.css
+@filepath: dashboard_engine/_framework/_templates/journal/journal.css
+@version: 1.0.0
+@updated: 2026-11-13 05:16:26 PM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Journal page type's look: Search and its results, the view tabs, the entry rows and groups, and the
+  Reader with an entry's Markdown body. Uses the engine's colors (styles.css): cyan for terms and links, gold for
+  journal entries and tags, the moderate color for docs. Every class carries the jn- prefix. A STAMPED file: changed
+  only at the engine home.
+@tags: template, page-type, journal, search, styles
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-13  Greg & Claude  1.0.0          Harvested from Project-AI-Local journal.html 1.0.0 (its style block): unchanged but for the Search classes, ls- renamed jn-q-
+=============================================================== */
+
+.jn-q-input{width:100%; max-width:620px; background:var(--panel); border:1px solid var(--hair); border-radius:8px; color:var(--ink); font:inherit; font-size:13px; padding:10px 12px; outline:none;}
+.jn-q-input:focus{border-color:var(--cyan);}
+.jn-q-results{display:grid; gap:8px; margin-top:12px;}
+.jn-q-hit{display:grid; grid-template-columns:70px 1fr auto; gap:4px 12px; background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:10px 14px; color:var(--ink); text-decoration:none;}
+.jn-q-hit:hover{border-color:var(--cyan);}
+.jn-q-type{font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); align-self:center;}
+.jn-q-term .jn-q-type{color:var(--cyan);}
+.jn-q-journal .jn-q-type{color:var(--gap);}
+.jn-q-doc .jn-q-type{color:var(--mod);}
+.jn-q-title{font-size:12px; font-weight:500;}
+.jn-q-meta{font-size:10px; color:var(--faint-text); text-align:right;}
+.jn-q-snip{grid-column:2 / 4; font-size:11px; line-height:1.5; color:var(--faint-text);}
+.jn-q-snip mark{background:none; color:var(--cyan); font-weight:500;}
+.jn-q-none{font-size:12px; color:var(--faint-text);}
+.jn-tabs{display:flex; gap:8px; margin-bottom:12px;}
+.jn-tab{background:none; border:1px solid var(--hair); border-radius:6px; color:var(--dim); font:inherit; font-size:11px; letter-spacing:1px; padding:5px 12px; cursor:pointer;}
+.jn-tab.on{border-color:var(--cyan); color:var(--cyan);}
+.jn-list{display:grid; gap:8px;}
+.jn-row{display:grid; grid-template-columns:90px 1fr auto; gap:4px 12px; background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:10px 14px; color:var(--ink); text-decoration:none;}
+.jn-row:hover{border-color:var(--cyan);}
+.jn-date{font-size:11px; color:var(--dim);}
+.jn-title{font-size:12px; font-weight:500;}
+.jn-desc{grid-column:2 / 4; font-size:11px; line-height:1.5; color:var(--faint-text);}
+.jn-status{font-size:9px; letter-spacing:1.5px; text-transform:uppercase; border:1px solid var(--hair); border-radius:4px; padding:1px 6px; align-self:center;}
+.jn-seed{color:var(--gap);}
+.jn-growing{color:var(--cyan);}
+.jn-settled{color:var(--done);}
+.jn-doc{color:var(--mod);}
+.jn-group{display:grid; gap:6px; margin-bottom:10px;}
+.jn-group-head{font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cyan);}
+.jn-group-head a{color:var(--cyan); text-decoration:none;}
+.jn-n{color:var(--dim);}
+.jn-none{font-size:12px; color:var(--faint-text);}
+.jn-reader{margin-top:4px;}
+.jn-entry{background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:16px 20px; scroll-margin-top:16px;}
+.jn-flash{border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan);}
+.jn-entry-head{display:flex; align-items:baseline; gap:10px;}
+.jn-entry-head h3{font-size:14px; color:var(--cyan);}
+.jn-meta{font-size:10px; color:var(--faint-text); margin:4px 0 10px;}
+.jn-file{color:var(--dim);}
+.jn-chips{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0;}
+.jn-chip{font-size:10px; letter-spacing:1px; border:1px solid var(--hair); border-radius:6px; padding:3px 8px; color:var(--cyan); text-decoration:none;}
+.jn-tag{color:var(--gap);}
+.jn-label{font-size:10px; color:var(--dim); align-self:center;}
+.jn-body{font-size:12px; line-height:1.7; color:var(--ink);}
+.jn-body h3, .jn-body h4, .jn-body h5{font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gap); margin:18px 0 6px; scroll-margin-top:16px;}
+.jn-body p{margin:0 0 10px;}
+.jn-body ul, .jn-body ol{margin:0 0 10px 18px;}
+.jn-body li{margin-bottom:4px;}
+.jn-body b{color:var(--ink); font-weight:600;}
+.jn-body code{font-size:11px; color:var(--cyan);}
+.jn-body pre{background:var(--bg); border:1px solid var(--hair); border-radius:8px; padding:12px; overflow-x:auto; font-size:11px; line-height:1.5; color:var(--ink);}
+.jn-body table{border-collapse:collapse; margin:0 0 10px; font-size:11px;}
+.jn-body th, .jn-body td{border:1px solid var(--hair); padding:4px 8px; text-align:left;}
+.jn-body a{color:var(--cyan);}
