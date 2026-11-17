@@ -1,0 +1,66 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/completed/template.yaml
+# @version: 1.0.0
+# @updated: 2026-11-17 01:27:17 PM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The Completed page type, in the form AiAssist and a chat read: its identity, that nothing is asked
+#   before it is founded, how it is stamped into every project, the two files founding copies, and the schema of its
+#   data: one entry per finished feature or backlog item, each completion dated. Read with a real YAML parser, never by
+#   string matching (Core_10 rule 6).
+# @tags: template, page-type, completed, trophy-room, schema
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-17  Greg & Claude  1.0.0          The Completed page type: one per project, required, no founding question, stamped folder, two founded files, schema 1.0.0
+# ===============================================================
+type: completed
+title: Completed
+need: required
+templateVersion: 1.0.0
+description: 'The trophy room (Core_16 law 15): every finished feature and backlog item, whole and dated, newest first; a reopened one gains a second dated completion on the same card.'
+harvestedFrom: Automation-JAV-AIModels completed.html 1.1.0 (2026-11-09) and Project-mAi-Methodology completed.html 1.2.0, both written by hand twice over (the page and the retired board); brought by Greg, asked by Automation-JAV-AIModels chat 01 (2026-11-17)
+
+# One Completed page per project: the page file is completed.html and its data is completed/completed-data.js.
+repeatable: false
+
+uses: []
+
+# Nothing is asked: a Completed page starts empty and gains an entry each time work finishes.
+ask: []
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/completed/ at every Launch, in every
+# project, used or not. Never edited in a project; readable over the wire, never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/completed/
+
+# FOUNDED: copied once, then the project's own and never overwritten. Paths on the right are in the project's
+# _docs/_dashboard/. FOUNDED_DATE is the founding day, YYYY-MM-DD.
+found:
+  - from: completed.html
+    to: completed.html
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT]
+  - from: example/completed-data.js
+    to: completed/completed-data.js
+    tokens: [FOUNDED_AT, FOUNDED_DATE]
+
+# Nothing is built: a chat adds an entry over the wire (an update with its base sha256) when work finishes. This file is
+# the one record of finished work: the page is never written by hand, and a retired board's rows are copied here once,
+# in their final state, when Greg declares it finished.
+build: null
+
+# The page's data: window.DASH_COMPLETED in completed/completed-data.js. Additive within a major version.
+data:
+  file: completed/completed-data.js
+  global: DASH_COMPLETED
+  schema: 1.0.0
+  fields:
+    - name: schema
+      type: string
+      required: false
+      means: the schema version the file was written to
+    - name: entries
+      type: list
+      required: true
+      means: 'one object per finished thing, in any order (the page shows the newest completion first): { id (a board id, or a BL- number for a backlog item; the card''s anchor), title, outcome (finished, the default, or withdrawn), opened (when work began, as written), completions [{ at (Chicago time, as written), steps (optional, "4 of 4"), note (optional) }], rows (optional: a board''s final rows, each { k, s (done, part, live or plan, as the board wrote it), n }), note (optional: what it was and what it left) }; a reopened entry that finishes again gains a second completion, never a second entry'

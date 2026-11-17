@@ -1,0 +1,77 @@
+# ===============================================================
+# @file: template.yaml
+# @filepath: dashboard_engine/_framework/_templates/backlog/template.yaml
+# @version: 1.0.0
+# @updated: 2026-11-17 08:13:40 AM CST
+# @author: Greg Paskal & Claude
+# @company: MissionWares®
+# @description: The Backlog page type, in the form AiAssist and a chat read: its identity, that nothing is asked before
+#   it is founded, how it is stamped into every project, the two files founding copies, and the schema of its data:
+#   numbered items (BL-001, never reused) in optional groups. Read with a real YAML parser, never by string matching
+#   (Core_10 rule 6).
+# @tags: template, page-type, backlog, schema
+# @changeLog:
+# Date        Author         Version        Description
+# ----------  -------------  -------------  --------------------------
+# 2026-11-17  Greg & Claude  1.0.0          The Backlog page type: one per project, no founding question, stamped folder, two founded files, schema 1.0.0 (BL- numbers, optional groups)
+# ===============================================================
+type: backlog
+title: Backlog
+need: required
+templateVersion: 1.0.0
+description: 'The project''s future work: every item numbered BL-001 and up for life, highest value on top, in optional groups that can be made or changed later.'
+harvestedFrom: Project-mAi-Methodology, _docs/_dashboard/backlog.html 2.1.0 (the ledger of record since 2026-07-30), with numbers and groups added (Greg, 2026-11-17, asked by RepoMon chat 27)
+
+# One Backlog page per project: the page file is backlog.html and its data is backlog/backlog-data.js.
+repeatable: false
+
+uses: []
+
+# Nothing is asked: a backlog starts empty and grows. Groups are optional and are added when they help.
+ask: []
+
+# STAMPED: this whole folder is copied to _docs/_dashboard/_framework/_templates/backlog/ at every Launch, in every
+# project, used or not. Never edited in a project; readable over the wire, never written by it (the fixed refusals).
+stamp:
+  to: _framework/_templates/backlog/
+
+# FOUNDED: copied once, then the project's own and never overwritten. Paths on the right are in the project's
+# _docs/_dashboard/. FOUNDED_DATE is the founding day, YYYY-MM-DD.
+found:
+  - from: backlog.html
+    to: backlog.html
+    tokens: [PROJECT_KEY, PROJECT_NAME, FOUNDED_AT]
+  - from: example/backlog-data.js
+    to: backlog/backlog-data.js
+    tokens: [FOUNDED_AT, FOUNDED_DATE]
+
+# Nothing is built: a chat changes the data file over the wire (an update with its base sha256), and the page redraws it.
+build: null
+
+# The page's data: window.DASH_BACKLOG in backlog/backlog-data.js. Additive within a major version: a field is only
+# ever added, never renamed, retyped or removed; the page reads the fields it knows and ignores the rest.
+# NUMBERS: every item gets the next number when it is added (BL-001, BL-002, ...), from next, which then goes up by one.
+# A number belongs to its item for life: it never changes when the item moves or is regrouped, and it is never reused,
+# not even after the item is finished or dropped. A finished item leaves the backlog for the Completed record, keeping
+# its number (Core_16: the Backlog holds only future work).
+data:
+  file: backlog/backlog-data.js
+  global: DASH_BACKLOG
+  schema: 1.0.0
+  fields:
+    - name: schema
+      type: string
+      required: false
+      means: the schema version the file was written to
+    - name: next
+      type: number
+      required: true
+      means: the number the next item gets; always above every number ever given, so a number is never reused
+    - name: groups
+      type: list
+      required: false
+      means: 'optional groupings of work, in the order they are shown, each { id, title, note }; id is a short lowercase word an item names; a group with no items still shows, as an empty group'
+    - name: items
+      type: list
+      required: true
+      means: 'one object per item, highest value first: { id (BL-001), title, status (idea, the default; next; or blocked), group (a group id, or none for ungrouped), note (what it is, why it exists, what unblocks it), added (YYYY-MM-DD) }'

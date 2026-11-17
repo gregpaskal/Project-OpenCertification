@@ -1,0 +1,25 @@
+/* ===============================================================
+@file: backlog.css
+@filepath: dashboard_engine/_framework/_templates/backlog/backlog.css
+@version: 1.0.0
+@updated: 2026-11-17 08:13:40 AM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Backlog page type's look, laid over the engine's boards, cards and rows (styles.css): the item
+  number, the item title, its added date, the group note, the blocked mark and the data warnings. Every class carries
+  the bl- prefix. A STAMPED file: changed only at the engine home.
+@tags: template, page-type, backlog, styles
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-17  Greg & Claude  1.0.0          The Backlog page type's styles: number, title, meta, group note, blocked, warnings
+=============================================================== */
+
+.bl-intro{color:var(--dim); margin:0 0 12px;}
+.row .bl-num{flex:0 0 64px; font-variant-numeric:tabular-nums; letter-spacing:1px;}
+.bl-title{color:var(--ink); font-weight:600;}
+.bl-meta{display:block; margin-top:3px; font-size:10px; color:var(--faint-text);}
+.bl-gnote{color:var(--dim); font-size:11px; margin:-4px 0 8px;}
+.bl-blocked{color:var(--gap);}
+.bl-empty{color:var(--dim);}
+.bl-warn{color:var(--danger); margin:0 0 10px;}

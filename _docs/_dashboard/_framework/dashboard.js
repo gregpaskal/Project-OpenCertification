@@ -1,8 +1,8 @@
 // ===============================================================
 // @file: dashboard.js
 // @filepath: dashboard_engine/_framework/dashboard.js
-// @version: 2.9.0
-// @updated: 2026-11-14 08:36:11 AM CST
+// @version: 2.10.0
+// @updated: 2026-11-17 04:41:38 PM CST
 // @author: Greg Paskal & Claude
 // @company: MissionWares®
 // @description: Shared site behavior for the living dashboard —
@@ -59,12 +59,13 @@
 // 2026-10-26  Greg & Claude  2.7.1          A run lane receipt no longer shows DELIVERY REFUSED (Greg saw a run's "started" called refused); one success list for the notice and the wire strip adds started, finished, killed and timed-out; runtime ENGINE_VERSION synced
 // 2026-11-12  Greg & Claude  2.8.0          PAGE ORDER (Greg: sortable pages, spacing and dividers the user sets, remembered): ARRANGE on the PAGES heading opens the arranger (drag or up/down, + SPACE, + LINE, + HEADING, DONE/CANCEL/RESET); the layout is kept per project in browser storage and laid over the manifest at every render (new pages join at the end, removed ones drop); Lanes takes part; runtime ENGINE_VERSION synced
 // 2026-11-14  Greg & Claude  2.9.0          THE TOOLS PHRASE ON THE STRIP (Greg, AiAssist chat 36): a tools cell beside methodology and dashboard, from stamp-data.js toolsPhrase (written by AiAssist at Launch), repainted with the stamp; runtime ENGINE_VERSION synced
+// 2026-11-17  Greg & Claude  2.10.0         LINKS IN THE PAGES MENU (Greg, chat 15: shortcuts like the mAi Lab, each dashboard its own): + LINK in ARRANGE, between + LINE and + HEADING; a link has a title, an address (http or https only) and a tab (new or this); it moves like any item, and renaming it or changing its address or tab never moves it (each link keeps a fixed id); kept with the layout in this browser; RESET asks a second click when links would be lost; runtime ENGINE_VERSION synced
 // ===============================================================
 
 (function () {
   // The engine announces itself — type DASH_ENGINE_VERSION in the
   // browser console to verify which engine a page is running.
-  var ENGINE_VERSION = '2.9.0';
+  var ENGINE_VERSION = '2.10.0';
   // 1.28.1: this page's birth moment — the line between replayed
   // history (older, never reloads) and live news (may reload).
   var PAGE_BOOT_MS = Date.now();
@@ -263,13 +264,35 @@
   // Where it is kept: this browser's storage, one key per project (mai-nav-layout--<project>), like the zoom and the
   // UPDATED ledger. The page cannot write a file (file:// and the wire's rules both forbid it), so a second browser or
   // a second Mac starts from the manifest order until it is arranged there too.
+  //
+  // 2.10.0, LINKS (Greg, 2026-11-17): a link is a fourth kind of item beside space, line and heading: a shortcut out of
+  // the dashboard (the mAi Lab first), added with + LINK. It has a title, an address and a tab (new, the default, or
+  // this one). It carries a fixed id from birth, so renaming it, readdressing it or switching its tab changes only that
+  // link and never its place. Only http and https addresses are accepted (no javascript:, no file:); a new-tab link
+  // opens with rel="noopener noreferrer". A saved link that cannot be read is skipped and named in the console.
   var LAYOUT_KEY = 'mai-nav-layout--' + PROJECT;
   var LAYOUT_HEAD_MAX = 40;
   var navEdit = null;      // the arranger's draft while it is open; null when the menu is shown
   var navEditSeq = 0;      // gives each draft row a key, so focus can follow a row after it moves
 
+  // An address a link may carry: http or https, and nothing else.
+  function linkUrlOk(u) {
+    if (typeof u !== 'string' || !/^https?:\/\//i.test(u.trim())) { return false; }
+    try { var x = new URL(u.trim()); return (x.protocol === 'http:' || x.protocol === 'https:') && !!x.host; } catch (e) { return false; }
+  }
+  function newLinkId() {
+    return 'L' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  }
   function cleanLayoutItem(it) {
     if (!it || typeof it !== 'object') { return null; }
+    if (it.t === 'link') {
+      var label = (typeof it.label === 'string') ? it.label.trim().slice(0, LAYOUT_HEAD_MAX) : '';
+      if (typeof it.id !== 'string' || !/^L[0-9a-z]{4,24}$/.test(it.id) || !label || !linkUrlOk(it.url)) {
+        try { console.warn('[dashboard] a saved menu link was skipped: it has no id, no title, or an address that is not http or https', it); } catch (e) {}
+        return null;
+      }
+      return { t: 'link', id: it.id, label: label, url: it.url.trim(), tab: it.tab === 'same' ? 'same' : 'new' };
+    }
     if (it.t === 'page' && typeof it.href === 'string' && it.href) { return { t: 'page', href: it.href }; }
     if (it.t === 'space' || it.t === 'line') { return { t: it.t }; }
     if (it.t === 'head' && typeof it.label === 'string') { return { t: 'head', label: it.label.trim().slice(0, LAYOUT_HEAD_MAX) }; }
@@ -322,6 +345,7 @@
         return;
       }
       var s = (it.t === 'head') ? { t: 'head', label: it.label } : { t: it.t };
+      if (it.t === 'link') { s = { t: 'link', id: it.id, label: it.label, url: it.url, tab: it.tab }; }
       s.k = it.k;
       out.push(s);
     });
@@ -364,6 +388,22 @@
     return a;
   }
 
+  // One link in the menu: a shortcut out of the dashboard, marked so it reads as leaving.
+  function menuLinkEl(e) {
+    var a = document.createElement('a');
+    a.className = 'pages-item pages-g pages-link';
+    a.href = e.url;
+    a.textContent = e.label;
+    a.title = e.url + (e.tab === 'same' ? '' : ' (opens in a new tab)');
+    if (e.tab !== 'same') { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+    var m = document.createElement('span');
+    m.className = 'pages-out';
+    m.setAttribute('aria-hidden', 'true');
+    m.textContent = e.tab === 'same' ? '→' : '↗';
+    a.appendChild(m);
+    return a;
+  }
+
   // One separator in the menu: a space, a line, or a heading over the pages below it.
   function separatorEl(e) {
     var d = document.createElement('div');
@@ -383,7 +423,7 @@
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'pages-arrange' + (navEdit ? ' on' : '');
-    btn.title = navEdit ? 'Done arranging: save this order' : 'Arrange the pages: change their order, add spaces, lines and headings';
+    btn.title = navEdit ? 'Done arranging: save this order' : 'Arrange the pages: change their order, add spaces, lines, links and headings';
     btn.setAttribute('aria-label', btn.title);
     btn.setAttribute('aria-pressed', navEdit ? 'true' : 'false');
     var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -425,7 +465,7 @@
 
     var dirty = readDirty();
     arrangeEntries(readLayout()).forEach(function (e) {
-      nav.insertBefore(e.t === 'page' ? pageLink(e.page, dirty) : separatorEl(e), anchor);
+      nav.insertBefore(e.t === 'page' ? pageLink(e.page, dirty) : (e.t === 'link' ? menuLinkEl(e) : separatorEl(e)), anchor);
     });
   }
 
@@ -440,6 +480,7 @@
     var d = { k: e.k || ('r' + navEditSeq), t: e.t };
     if (e.t === 'page') { d.href = e.href; d.page = e.page; }
     if (e.t === 'head') { d.label = e.label; }
+    if (e.t === 'link') { d.id = e.id; d.label = e.label; d.url = e.url; d.tab = e.tab; }
     return d;
   }
   function arrangerOpen() {
@@ -448,6 +489,14 @@
   }
   function arrangerDone() {
     if (!navEdit) { return; }
+    // A link with no title or a bad address is not saved: DONE stays put and points at it.
+    var bad = navEdit.items.filter(function (it) { return it.t === 'link' && (!String(it.label || '').trim() || !linkUrlOk(it.url)); })[0];
+    if (bad) {
+      navEdit.msg = 'Link "' + (String(bad.label || '').trim() || 'untitled') + '": give it a title and an address starting http:// or https://';
+      arrangerRedraw();
+      arrangerFocus(bad.k, String(bad.label || '').trim() ? 'input.pages-eurl' : 'input.pages-elabel');
+      return;
+    }
     var items = navEdit.items;
     navEdit = null;
     writeLayout(items);
@@ -460,15 +509,25 @@
   }
   function arrangerReset() {
     if (!navEdit) { return; }
+    // RESET drops the links with the rest: when there are any, the first click asks, the second resets.
+    var links = navEdit.items.filter(function (it) { return it.t === 'link'; }).length;
+    if (links && !navEdit.resetArmed) {
+      navEdit.resetArmed = true;
+      navEdit.msg = 'RESET removes ' + links + ' link' + (links === 1 ? '' : 's') + ' too. Press RESET again to go ahead.';
+      arrangerRedraw();
+      return;
+    }
+    navEdit.resetArmed = false;
+    navEdit.msg = '';
     navEdit.items = arrangeEntries(null).map(draftEntry);
     arrangerRedraw();
   }
   function arrangerAdd(t) {
     if (!navEdit) { return; }
-    var e = draftEntry(t === 'head' ? { t: 'head', label: 'Group' } : { t: t });
+    var e = draftEntry(t === 'head' ? { t: 'head', label: 'Group' } : (t === 'link' ? { t: 'link', id: newLinkId(), label: 'Link', url: 'https://', tab: 'new' } : { t: t }));
     navEdit.items.push(e);
     arrangerRedraw();
-    arrangerFocus(e.k, t === 'head' ? 'input' : '.pages-ebtn-remove');
+    arrangerFocus(e.k, (t === 'head' || t === 'link') ? 'input' : '.pages-ebtn-remove');
   }
   function arrangerRemove(k) {
     if (!navEdit) { return; }
@@ -533,6 +592,42 @@
       what.addEventListener('keydown', function (ev) {
         if (ev.key === 'Enter') { ev.preventDefault(); what.blur(); }
       });
+    } else if (it.t === 'link') {
+      // A link's three settings, each changed in place: changing them never moves the row.
+      what = document.createElement('div');
+      what.className = 'pages-elink';
+      var title = document.createElement('input');
+      title.type = 'text';
+      title.className = 'pages-elabel';
+      title.value = it.label;
+      title.maxLength = LAYOUT_HEAD_MAX;
+      title.placeholder = 'Title';
+      title.setAttribute('aria-label', 'Link title');
+      title.addEventListener('input', function () { it.label = title.value; });
+      var url = document.createElement('input');
+      url.type = 'url';
+      url.className = 'pages-eurl' + (linkUrlOk(it.url) ? '' : ' pages-ebad');
+      url.value = it.url;
+      url.placeholder = 'https://';
+      url.setAttribute('aria-label', 'Link address');
+      url.addEventListener('input', function () { it.url = url.value; url.classList.toggle('pages-ebad', !linkUrlOk(url.value)); });
+      var tab = document.createElement('select');
+      tab.className = 'pages-etab';
+      tab.setAttribute('aria-label', 'Where the link opens');
+      [['new', 'New tab'], ['same', 'This tab']].forEach(function (o) {
+        var op = document.createElement('option');
+        op.value = o[0];
+        op.textContent = o[1];
+        if (it.tab === o[0]) { op.selected = true; }
+        tab.appendChild(op);
+      });
+      tab.addEventListener('change', function () { it.tab = tab.value; });
+      [title, url].forEach(function (inp) {
+        inp.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); inp.blur(); } });
+      });
+      what.appendChild(title);
+      what.appendChild(url);
+      what.appendChild(tab);
     } else {
       what = document.createElement('span');
       what.className = 'pages-elabel';
@@ -540,7 +635,7 @@
     }
     row.appendChild(what);
 
-    var name = it.t === 'page' ? pageMenuLabel(it.page) : it.t;
+    var name = it.t === 'page' ? pageMenuLabel(it.page) : (it.t === 'link' ? 'link ' + (it.label || '') : it.t);
     var up = arrangerButton('▲', 'pages-ebtn pages-ebtn-up', 'Move ' + name + ' up', function () { arrangerMove(it.k, -1); });
     var down = arrangerButton('▼', 'pages-ebtn pages-ebtn-down', 'Move ' + name + ' down', function () { arrangerMove(it.k, 1); });
     up.disabled = (i === 0);
@@ -572,6 +667,7 @@
     add.className = 'pages-etools';
     add.appendChild(arrangerButton('+ SPACE', 'pages-btn', 'Add a space at the end of the menu', function () { arrangerAdd('space'); }));
     add.appendChild(arrangerButton('+ LINE', 'pages-btn', 'Add a line at the end of the menu', function () { arrangerAdd('line'); }));
+    add.appendChild(arrangerButton('+ LINK', 'pages-btn', 'Add a link at the end of the menu: a title, an address and the tab it opens in', function () { arrangerAdd('link'); }));
     add.appendChild(arrangerButton('+ HEADING', 'pages-btn', 'Add a heading at the end of the menu', function () { arrangerAdd('head'); }));
     box.appendChild(add);
 
@@ -579,8 +675,15 @@
     act.className = 'pages-etools';
     act.appendChild(arrangerButton('DONE', 'pages-btn pages-btn-done', 'Save this order', arrangerDone));
     act.appendChild(arrangerButton('CANCEL', 'pages-btn', 'Leave the menu as it was', arrangerCancel));
-    act.appendChild(arrangerButton('RESET', 'pages-btn', 'Back to the order the pages were added in, with no spaces, lines or headings (saved by DONE)', arrangerReset));
+    act.appendChild(arrangerButton('RESET', 'pages-btn', 'Back to the order the pages were added in, with no spaces, lines, links or headings (saved by DONE)', arrangerReset));
     box.appendChild(act);
+    if (navEdit.msg) {
+      var msg = document.createElement('p');
+      msg.className = 'pages-emsg';
+      msg.setAttribute('role', 'status');
+      msg.textContent = navEdit.msg;
+      box.appendChild(msg);
+    }
 
     box.addEventListener('keydown', function (ev) {
       if (ev.key === 'Escape') { ev.preventDefault(); arrangerCancel(); }

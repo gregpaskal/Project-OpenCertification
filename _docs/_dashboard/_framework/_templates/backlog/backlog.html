@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- ===============================================================
+@file: backlog.html
+@filepath: dashboard_engine/_framework/_templates/backlog/backlog.html
+@version: 1.0.0
+@updated: 2026-11-17 08:13:40 AM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Backlog page type's starting page, founded as backlog.html at a project's dashboard root (tokens
+  swapped, founding refused if any token survives). A FOUNDED file: it belongs to the project from birth and is never
+  overwritten; it carries only identity (the DASH_* variables and the mai-* meta tags) and the page's frame. The items
+  live in backlog/backlog-data.js; _framework/_templates/backlog/backlog.js draws them, numbered and grouped.
+  Previewed at the engine home, the unswapped tokens rendering as literal text are the tell that this is the template.
+@tags: template, page-type, backlog, thin-shell, living-dashboard
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-17  Greg & Claude  1.0.0          The Backlog page type's starting page, harvested from Project-mAi-Methodology backlog.html 2.1.0: its OPEN WORK frame kept, its rows moved to the data file, BL- numbers and optional groups added
+=============================================================== -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mai-project" content="{{PROJECT_KEY}}">
+<meta name="mai-founded" content="{{FOUNDED_AT}}">
+<meta name="mai-page-type" content="backlog">
+<meta name="mai-page-template-version" content="1.0.0">
+<title>Backlog</title>
+<link rel="stylesheet" href="_framework/styles.css">
+<link rel="stylesheet" href="_framework/_templates/backlog/backlog.css">
+</head>
+<body>
+
+<script>
+  /* Identity: the only configuration a page carries. */
+  window.DASH_PROJECT = '{{PROJECT_KEY}}';
+  window.DASH_NAME    = '{{PROJECT_NAME}}';
+  window.DASH_PAGE    = 'BACKLOG';
+  window.DASH_HOME    = 'index.html';
+  window.DASH_FOUNDED = '{{FOUNDED_AT}}';
+</script>
+
+<div id="authored">
+
+<section id="open">
+  <h2>OPEN WORK <span class="tag" id="bl-count">loading</span></h2>
+  <p class="bl-intro">Everything worth building, highest value on top. Each item keeps its BL- number for life.</p>
+  <div class="boards" id="bl-groups"><span class="bl-empty">No items yet.</span></div>
+</section>
+
+</div>
+
+<script src="_framework/dashboard.js"></script>
+<script src="backlog/backlog-data.js"></script>
+<script src="_framework/_templates/backlog/backlog.js"></script>
+</body>
+</html>

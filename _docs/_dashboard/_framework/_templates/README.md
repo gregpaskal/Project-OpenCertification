@@ -1,8 +1,8 @@
 <!-- ===============================================================
 @file: README.md
 @filepath: dashboard_engine/_framework/_templates/README.md
-@version: 1.7.0
-@updated: 2026-11-14 07:07:33 PM CST
+@version: 1.9.0
+@updated: 2026-11-17 01:27:17 PM CST
 @author: Greg Paskal & Claude
 @company: MissionWares®
 
@@ -30,6 +30,8 @@ Date        Author         Version        Description
 2026-11-13  Greg & Claude  1.5.0          The guide type is renamed user-guide (Greg: get everything changed over to user guide): both trees, SHARED PARTS, BUILT DATA ("update the user guide") and Page identity (UG_TEMPLATE_VERSION) follow
 2026-11-13  Greg & Claude  1.6.0          The Glossary, Journal and Instruments page types join (harvested from Project-AI-Local; Greg: add all three so we can streamline this process): both trees, SHARED PARTS (the Glossary uses Ask), BUILT DATA ("update the glossary", "update the journal") and Page identity (GL_, JN_, IN_TEMPLATE_VERSION) follow; FOUNDING A PAGE step 5 names LANE_TOPIC
 2026-11-14  Greg & Claude  1.7.0          The Test Results page type joins (harvested from Automation-JAV-Framework's Results page; Greg: add the Results page, call it Test Results): both trees, BUILT DATA (data the project's own code writes) and Page identity (TR_TEMPLATE_VERSION) follow
+2026-11-17  Greg & Claude  1.8.0          The Backlog page type joins, the first type every project founds (need: required; Greg: every project has a dashboard, every backlog item a BL- number, groups optional): both trees and Page identity (BL_TEMPLATE_VERSION) follow
+2026-11-17  Greg & Claude  1.9.0          The Completed page type joins, required beside Backlog (Greg, asked by Automation-JAV-AIModels chat 01): both trees and Page identity (CP_TEMPLATE_VERSION) follow
 =============================================================== -->
 
 # README.md
@@ -61,6 +63,22 @@ dashboard_engine/
     └── _templates/               every page type a dashboard can have
         ├── README.md             this file: the page-type law
         ├── dashboard-templates-data.js   DASHBOARD TEMPLATES: the one list of types
+        ├── backlog/              REQUIRED: every project has a Backlog
+        │   ├── template.yaml
+        │   ├── README.md
+        │   ├── backlog.html      the starting page
+        │   ├── backlog.js        groups, BL- numbers, the number check
+        │   ├── backlog.css       its one stylesheet
+        │   └── example/
+        │       └── backlog-data.js   an empty backlog, next BL-001
+        ├── completed/            REQUIRED: every project has a Completed page
+        │   ├── template.yaml
+        │   ├── README.md
+        │   ├── completed.html    the starting page
+        │   ├── completed.js      cards newest first, the record check
+        │   ├── completed.css     its one stylesheet
+        │   └── example/
+        │       └── completed-data.js an empty record
         ├── diagrams/             OPTIONAL
         │   ├── template.yaml
         │   ├── README.md
@@ -132,7 +150,8 @@ Home, Backlog and Lanes become types of their own in a later pass; until then Ho
 ```
 _docs/_dashboard/
 ├── index.html                Home          (the project's, founded once)
-├── backlog.html              Backlog       (the project's)
+├── backlog.html              Backlog       (the project's, founded from the Backlog type; a hand-written one moves to it at the next serious work)
+├── completed.html            Completed     (the project's, founded from the Completed type; its record in completed/completed-data.js)
 ├── diagrams.html             Diagrams      (only once founded)
 ├── glossary.html             Glossary      (only once founded)
 ├── instruments.html          Instruments   (only once founded)
@@ -167,6 +186,8 @@ _docs/_dashboard/
 │   └── _templates/           every page type, used or not
 │       ├── README.md         this file: the law a chat follows
 │       ├── dashboard-templates-data.js   DASHBOARD TEMPLATES: the list a chat reads
+│       ├── backlog/          here in every project, and founded in every project
+│       ├── completed/        here in every project, and founded in every project
 │       ├── diagrams/         here when not used: a page the dashboard can have
 │       ├── glossary/         the same
 │       ├── instruments/      the same
@@ -227,7 +248,7 @@ One base stylesheet plus one stylesheet per page type as needed (Greg, 2026-11-1
 
 ## Page identity
 
-A page founded from a type carries `<meta name="mai-page-type">` (the type's name, exactly as its folder) and `<meta name="mai-page-template-version">` (the type's `templateVersion` when it was founded). Its copied code announces itself in the console (`DG_TEMPLATE_VERSION` for Diagrams, `LST_TEMPLATE_VERSION` for Listing, `UG_TEMPLATE_VERSION` for User Guide, `GL_TEMPLATE_VERSION` for Glossary, `JN_TEMPLATE_VERSION` for Journal, `IN_TEMPLATE_VERSION` for Instruments, `TR_TEMPLATE_VERSION` for Test Results; a shared part as its README says), as the engine does with `DASH_ENGINE_VERSION`. Section ids are stable across template versions (Core_16 law 3): a version may add or reorder sections, never rename one. These two tags are what a later review compares against Dashboard Templates to find pages founded from an older template.
+A page founded from a type carries `<meta name="mai-page-type">` (the type's name, exactly as its folder) and `<meta name="mai-page-template-version">` (the type's `templateVersion` when it was founded). Its copied code announces itself in the console (`BL_TEMPLATE_VERSION` for Backlog, `CP_TEMPLATE_VERSION` for Completed, `DG_TEMPLATE_VERSION` for Diagrams, `LST_TEMPLATE_VERSION` for Listing, `UG_TEMPLATE_VERSION` for User Guide, `GL_TEMPLATE_VERSION` for Glossary, `JN_TEMPLATE_VERSION` for Journal, `IN_TEMPLATE_VERSION` for Instruments, `TR_TEMPLATE_VERSION` for Test Results; a shared part as its README says), as the engine does with `DASH_ENGINE_VERSION`. Section ids are stable across template versions (Core_16 law 3): a version may add or reorder sections, never rename one. These two tags are what a later review compares against Dashboard Templates to find pages founded from an older template.
 
 ## Dashboard Templates
 
@@ -251,4 +272,4 @@ Types are harvested, never invented: a page earns a place here by working in a r
 
 ---
 
-*README.md v1.7.0*
+*README.md v1.9.0*

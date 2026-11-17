@@ -1,0 +1,25 @@
+/* ===============================================================
+@file: completed.css
+@filepath: dashboard_engine/_framework/_templates/completed/completed.css
+@version: 1.0.0
+@updated: 2026-11-17 01:27:17 PM CST
+@author: Greg Paskal & Claude
+@company: MissionWares®
+@description: The Completed page type's look, laid over the engine's boards, cards and rows (styles.css): the entry's
+  number, its completion lines, the withdrawn mark, the entry note and the data warnings. Every class carries the cp-
+  prefix. A STAMPED file: changed only at the engine home.
+@tags: template, page-type, completed, styles
+@changeLog:
+Date        Author         Version        Description
+----------  -------------  -------------  --------------------------
+2026-11-17  Greg & Claude  1.0.0          The Completed page type's styles: number, completion lines, withdrawn, note, warnings
+=============================================================== */
+
+.cp-intro{color:var(--dim); margin:0 0 12px;}
+.cp-num{color:var(--dim); font-variant-numeric:tabular-nums; letter-spacing:1px; margin-right:6px;}
+.cp-when{color:var(--dim); font-size:11px; margin:-4px 0 4px;}
+.cp-when .cp-again{color:var(--gap);}
+.cp-note{margin:6px 0 4px;}
+.cp-withdrawn{color:var(--faint-text);}
+.cp-empty{color:var(--dim);}
+.cp-warn{color:var(--danger); margin:0 0 10px;}

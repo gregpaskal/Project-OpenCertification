@@ -7,8 +7,8 @@ window.DASH_CORES = {
     },
     {
       "file" : "TD_mAi_Core_02_Session_Protocol.md",
-      "updated" : "2026-11-14 05:13:31 PM CST",
-      "version" : "3.5.0"
+      "updated" : "2026-11-17 08:13:40 AM CST",
+      "version" : "3.6.0"
     },
     {
       "file" : "TD_mAi_Core_03_Handoff_Protocol.md",
@@ -27,8 +27,8 @@ window.DASH_CORES = {
     },
     {
       "file" : "TD_mAi_Core_06_Project_Context_System.md",
-      "updated" : "2026-11-14 08:36:11 AM CST",
-      "version" : "4.8.0"
+      "updated" : "2026-11-17 08:13:40 AM CST",
+      "version" : "4.9.0"
     },
     {
       "file" : "TD_mAi_Core_07_Recovery_Procedures.md",
@@ -37,13 +37,13 @@ window.DASH_CORES = {
     },
     {
       "file" : "TD_mAi_Core_08_Workflow_Shortcuts.md",
-      "updated" : "2026-11-14 08:36:11 AM CST",
-      "version" : "5.2.0"
+      "updated" : "2026-11-17 08:13:40 AM CST",
+      "version" : "5.2.1"
     },
     {
       "file" : "TD_mAi_Core_09_AI_Directive_Mission_Guide.md",
-      "updated" : "2026-11-08 02:17:50 PM CST",
-      "version" : "2.0.3"
+      "updated" : "2026-11-17 08:13:40 AM CST",
+      "version" : "2.0.4"
     },
     {
       "file" : "TD_mAi_Core_10_Silent_Confidence_Framework.md",
@@ -77,16 +77,16 @@ window.DASH_CORES = {
     },
     {
       "file" : "TD_mAi_Core_16_Living_Dashboard.md",
-      "updated" : "2026-11-12 08:09:17 PM CST",
-      "version" : "2.1.0"
+      "updated" : "2026-11-17 08:13:40 AM CST",
+      "version" : "2.2.0"
     }
   ],
   "methodology" : {
-    "bytes" : 279580,
+    "bytes" : 281234,
     "lines" : 3927,
-    "phrase" : "Earth-Front-Sausage",
-    "sha256" : "456baafedc772e3ac46b240032a0374d50703d5d154128a6f0cccc403a34bc54"
+    "phrase" : "Expand-More-Sound",
+    "sha256" : "5031fb3f648d7e3e1432493ae8f405015267fa1d5bc4c022391ebdd6402557ad"
   },
-  "sourceCurrentAsOf" : "2026-11-14 05:13:31 PM CST",
+  "sourceCurrentAsOf" : "2026-11-17 08:13:40 AM CST",
   "v" : 1
 };

@@ -1,8 +1,8 @@
 /* ===============================================================
 @file: styles.css
 @filepath: dashboard_engine/_framework/styles.css
-@version: 1.7.0
-@updated: 2026-11-12 09:07:07 PM CST
+@version: 1.8.0
+@updated: 2026-11-17 04:41:38 PM CST
 @author: Greg Paskal & Claude
 @company: MissionWares®
 @description: The dashboard's shared design system — one token
@@ -28,6 +28,7 @@ Date        Author         Version        Description
 2026-10-14  Greg & Claude  1.5.0          AUDIT J-16, J-17 (AiAssist Session 32): .stampkey read the undefined token --t and now uses --dim; quiet text (footer, .count, .wire-line) moves from --faint (about 2.0:1 on the background, below WCAG AA) to the new --faint-text (5.2:1); plan glyphs use --dim (4.3:1, above the 3:1 for symbols); --faint stays for rails and lines; dead rules removed: .zoomrow (the zoom control is one select, .zoomsel) and h2.live-h2 (the LIVE heading left with engine 2.5.0); the ledger vocabulary (rails, pills, prose) stays for the pages that author it
 2026-10-26  Greg & Claude  1.6.0          The Lanes page (engine 2.7.0)
 2026-11-12  Greg & Claude  1.7.0          Page order (engine 2.8.0): the ARRANGE button, the menu's spaces, lines and headings, and the arranger's rows, grip and buttons
+2026-11-17  Greg & Claude  1.8.0          Links in the PAGES menu (engine 2.10.0): the out mark, the arranger's link row (title, address, tab), a bad address, the arranger's message line
 =============================================================== */
 :root{
   --bg:#0B0E14; --panel:#111622; --hair:#232B3D;
@@ -248,3 +249,9 @@ nav input.pages-elabel{width:0; padding:2px 5px; font-size:9px; letter-spacing:1
 .pages-btn:hover, .pages-btn:focus-visible{color:var(--cyan); border-color:var(--cyan); outline:none;}
 .pages-btn-done{color:var(--bg); background:var(--cyan); border-color:var(--cyan);}
 .pages-btn-done:hover, .pages-btn-done:focus-visible{color:var(--bg); background:var(--ink); border-color:var(--ink);}
+.pages-link .pages-out{margin-left:6px; font-size:10px; color:var(--faint-text);}
+.pages-elink{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:3px; padding:2px 0;}
+.pages-elink input.pages-elabel{width:auto; text-transform:none; letter-spacing:0; font-size:11px;}
+.pages-eurl, .pages-etab{min-width:0; padding:2px 5px; font-size:10px; color:var(--ink); background:var(--bg); border:1px solid var(--hair); border-radius:4px;}
+.pages-eurl.pages-ebad{border-color:var(--danger);}
+.pages-emsg{margin:8px 0 0; font-size:10px; color:var(--gap);}
