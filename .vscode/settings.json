@@ -2,13 +2,13 @@
     // ===============================================================
     // @file: settings.json
     // @filepath: .vscode/settings.json
-    // @version: 1.13.0
-    // @updated: 2025-12-09 09:35:00 AM CDT
+    // @version: 1.16.1
+    // @updated: 2026-11-26 06:16:49 PM CST
     // @author: Greg Paskal
     // @company: MissionWares
     //
     // @description:
-    // VSCode workspace settings configuration for the Automation-JAV-SwagLabs project.
+    // VSCode workspace settings configuration for mAi project.
     // These configurations ensure a consistent IDE experience across all developers
     // working on the project. This file should be included in the root of the project
     // repository in a directory named .vscode. Settings include editor preferences,
@@ -32,6 +32,12 @@
     // 2025-07-31  G. Paskal       1.1.0    Added formatting of 4 spaces of tab
     // 2025-09-09  G. Paskal       1.11.0   Updated to mAi™ header standard
     // 2025-12-09  G. Paskal       1.12.0   Disabled java.autobuild to prevent dual process spawning
+    // 2025-12-09  G. Paskal       1.13.0   Not recorded: the header read 1.13.0 with no changelog row
+    // 2026-11-26  Greg & Claude   1.14.0   Organize imports on save off for the extensions in use: editor.codeActionsOnSave never and java.saveActions.organizeImports false (Red Hat); the Oracle setting jdk.java.onSave.organizeImports removed with Oracle's extension
+    // 2026-11-26  Greg & Claude   1.15.0   java.settings.url points the Java extension at .vscode/java.prefs, its warning rules, where unused imports are ignored: the suites keep one common import block by design (Greg)
+    // 2026-11-26  Greg & Claude   1.15.1   The two settings Red Hat reports as deprecated: java.home renamed java.jdt.ls.java.home (same JDK); java.saveActions.organizeImports removed (editor.codeActionsOnSave never already covers it)
+    // 2026-11-26  Greg & Claude   1.16.0   java.autobuild on again so the Problems panel covers the whole project (Greg); off since 1.12.0 for dual process spawning, likely from the Oracle and George Fraser Java servers removed today: a trial, back to false if it returns
+    // 2026-11-26  Greg & Claude   1.16.1   java.compile.nullAnalysis.mode disabled: automatic let the Java extension set its own null rules over .vscode/java.prefs (15 false potential null warnings stayed); java.prefs is now the only source of the null rules
     // ===============================================================
 
     // ======================== IDE Settings =========================
@@ -82,10 +88,10 @@
     "breadcrumbs.enabled": false,
 
     // Controls whether to render whitespace characters
-    "editor.renderWhitespace": "none",
+    "editor.renderWhitespace": "all",
 
-    // Controls whether to reorganize imports on save
-    "jdk.java.onSave.organizeImports": false,
+    // Controls whether to reorganize imports on save (never: imports stay as written)
+    "editor.codeActionsOnSave": {"source.organizeImports": "never"},
 
     // ======================== AI Settings =========================
 
@@ -95,13 +101,16 @@
     // ======================== Java Settings ========================
 
     // Instructs VSCode where to find the Java Development Kit
-    "java.home": "/opt/homebrew/opt/openjdk/",
+    "java.jdt.ls.java.home": "/opt/homebrew/opt/openjdk/",
 
-    // Controls whether Java auto-build is enabled
-    "java.autobuild.enabled": false,
+    // Controls whether Java auto-build is enabled (true: the whole project is checked, not only open files)
+    "java.autobuild.enabled": true,
 
-    // Controls the null analysis mode in Java
-    "java.compile.nullAnalysis.mode": "automatic",
+    // Controls the Java compiler warnings the Java extension shows: its rules are in .vscode/java.prefs (unused imports ignored: the suites share one import block)
+    "java.settings.url": ".vscode/java.prefs",
+
+    // Controls the null analysis mode in Java (disabled: the null rules come only from .vscode/java.prefs; automatic overrides them)
+    "java.compile.nullAnalysis.mode": "disabled",
 
     // Controls how the Java build configuration is updated
     "java.configuration.updateBuildConfiguration": "automatic",
